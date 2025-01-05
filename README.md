@@ -10,6 +10,7 @@
 3. 타입스크립트 Compiler 설치
 4. 설치 확인
 5. .ts 확장자 파일 컴파일
+<br>
 
 ## 1. NodeJS 프로젝트(패키지) 초기화
 
@@ -29,7 +30,7 @@ package.json확인
 📂onebite-typescript   
 ┠ 📂 section01  
 ┃ ┖ 📄package.json  
-
+<br>
 
 ## 2. types/node 설치
 
@@ -45,8 +46,8 @@ package.json의 dependency와 node_modules 디렉토리 생성확인
 
 ### 최종 디렉토리 구조
 📂onebite-typescript   
-┠ 📂 node_modules  
 ┠ 📂 section01  
+┃ ┠ 📂 node_modules  
 ┃ ┠ 📄package-lock.json  
 ┃ ┖ 📄package.json  
 
@@ -74,12 +75,14 @@ sudo npm install typescript -g
 이때 맥 사용자의 경우 패스워드가 나오게 된다.
 
 만약 윈도우 사용자임에도 권한 오류가 난다면 명령 프롬프트를 관리자 권한으로 연 뒤 명령어를 입력해 주면 된다.
+<br>
 
 ## 4. 설치 확인
 
 ```bash
 tsc -v
 ```
+<br>
 
 ## 5. tsc를 이용한 .ts 확장자 파일 컴파일
 
@@ -104,8 +107,8 @@ tsc -v
 
 ### 최종 디렉토리 구조
 📂onebite-typescript   
-┠ 📂 node_modules  
 ┠ 📂 section01  
+┃ ┠ 📂 node_modules  
 ┃ ┠ 📂 src  
 ┃ ┃ ┠ 📄index.js  
 ┃ ┃ ┖ 📄index.ts  
@@ -123,6 +126,7 @@ tsc -v
   ```bash
   Hello TypeScript
   ```
+<br>
 
 ## 6. ts-node를 활용하여 컴파일 및 실행 
 
@@ -166,6 +170,7 @@ ts-node는 이름에서 보면 알 수 있듯 타입스크립트 컴파일러와
   ```bash
   Hello TypeScript
   ```
+<br>
 
 ## 7. tsx (ts-node가 동작하지 않을 때)
 23년 10월 Node.js의 LTS(장기 지원 버전)가 20대로 업데이트 되며 ts-node가 정상적으로 동작하지 않는다.  
