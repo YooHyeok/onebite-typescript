@@ -166,5 +166,58 @@
 </details>
 <br>
 
+
+## Include 옵션
+<details>
+<summary>펼치기/접기</summary>
+
+<br>
+컴파일 할 타입스크립트 파일들의 범위와 위치를 알려주는 옵션이다.  
+index.ts같은 파일들을 컴파일 해야 될 때 `tsc src/index.ts`라는 명령어를 실행하였다.  
+만약 index.ts파일 하나만 있는것이 아니라 100개의 타입스크립트 파일이 있었다고 치면 일일이 `tsc 파일이름` 이라는 100번의 명령어를 입력해줘야 하기 때문이다.  
+
+include라는 옵션을 이용하면 특정 폴더, 예를들어 src 폴더 하위에 있는 모든 타입스크립트 파일을 동시에 한 번의 명령으로 컴파일 하도록 설정할 수 있다.  
+
+tsconfig.json 파일에 include라는 항목을 생성하게 되면 빈 배열의 value가 key:value 형태로 자동 완성 된다.  
+해당 빈배열 안에 "src" 라는 문자열을 넣도록 한다.
+
+- tsconfig.json
+  ```json
+  {
+    "include" : ["src"]
+  }
+  ```
+
+위와 같이 설정하면 "src라는 경로 하위에 있는 모든 파일을 포함해서 한번에 컴파일 해라." 라는 의미
+즉, "너가 컴파일 할 경우가 src 야." 라는 것과 똑같다.  
+이렇게 설정한 뒤 이전에 컴파일 했던 .js 확장자의 컴파일 결과 파일을 삭제 후 파일 이름을 제외한 tsc를 명령어로 입력만 해주면 자동으로 index.ts라는 경로를 명시 하지 않았음에도 src 디렉토리 안에 있는 모든 파일들을 동시에 컴파일 해 준다.
+
+- src/test.ts
+  ```ts
+  console.log("Hello Test")
+  ```
+
+#### [컴파일 전]
+📂onebite-typescript   
+┠ 📂 section01  
+┃ ┠ 📂 node_modules  
+┃ ┠ 📂 src  
+┃ ┃ ┠ 📄index.ts  
+┃ ┃ ┖ 📄test.ts  
+
+- tsc 컴파일 명령
+  ```bash
+  tsc
+  ```
+
+#### [컴파일 후]
+📂onebite-typescript   
+┠ 📂 section01  
+┃ ┠ 📂 node_modules  
+┃ ┠ 📂 src  
+┃ ┃ ┠ 📄index.js  
+┃ ┃ ┠ 📄index.ts  
+┃ ┃ ┠ 📄test.js  
+┃ ┃ ┖ 📄test.ts  
 </details>
 <br>
