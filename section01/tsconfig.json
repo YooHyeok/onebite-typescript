@@ -2,7 +2,8 @@
   "compilerOptions": {
     // "target": "ES5"
     "target": "ESNext",
-    "module": "CommonJS" /* module - CommonJS */
+    // "module": "CommonJS" /* module - CommonJS */
+    "module": "ESNext" /* module - ESNext */
   },
   "include": ["src"]
 }
