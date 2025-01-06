@@ -221,3 +221,70 @@ tsconfig.json 파일에 include라는 항목을 생성하게 되면 빈 배열�
 ┃ ┃ ┖ 📄test.ts  
 </details>
 <br>
+
+## Target 옵션
+<details>
+<summary>펼치기/접기</summary>
+
+<br>
+타입스크립트 코드를 컴파일해서 만들어지는 자바스크립트 코드의 버전을 설정하는 옵션이다.
+
+- tsconfig.json
+  ```json
+  {
+    "compilerOptions": {
+      "target": "ES6"
+    },
+    "include": ["src"]
+  }
+  ```
+compilerOptions 옵션을 생성하고 value에 해당하는 json 객체에 target 옵션을 생성한 뒤 target 옵션의 value를 "ES5"로 설정한다.  
+이와같이 설정할 경우 컴파일 결과로 생성되는 자바스크립트 코드의 버전이 ES5 즉, 옛 버전의 자바스크립트가 생성된다.
+
+컴파일 예제를 다음과 같이 구성한 뒤 컴파일을 진행한다.
+
+- target.ts
+  ```ts
+  const func = () => console.log("hello")
+  ```
+
+- target.js
+  ```js
+  var func = function () { return console.log("hello"); };
+  ```
+
+타겟을 ES5로 설정했고, ES5버전에는 화살표 함수가 없기 때문에 컴파일 과정에서 함수 표현식으로 변환 된것이다.
+
+
+- tsconfig.json
+  ```json
+  {
+    "compilerOptions": {
+      "target": "ESNext"
+    },
+    "include": ["src"]
+  }
+  ```
+
+- target.ts
+  ```ts
+  const func = () => console.log("hello")
+  ```
+
+- target.js
+  ```js
+  const func = () => console.log("hello")
+  ```
+
+**ESNext**는 자바스크립트 최신 버전을 의미한다.  
+다시 한번 tsc로 컴파일 할 경우 컴파일 결과 생성되는 자바스크립트 파일도 화살표 함수를 갖게 된다.  
+이렇게 컴파일러 옵션의 타겟 옵션을 이용하면 생성되는 자바스크립트 코드의 버전을 마음대로 조정할 수 있다.  
+
+### 어디에 왜 사용할까?
+타입스크립트를 통해서 만드는 프로덕트가 무조건 ES6를 지원하는 곳에서 동작하리라는 보장은 없다.  
+즉, 옛날 자바스크립트 버전을 사용하는 구형 브라우저 혹은 예전의 서버 환경 등에서 동작시키려면 옛날 자바스크립트 버전을 사용해야할 일이 있기 때문에 중요한 옵션이다.  
+
+include 옵션과는 달리 target 옵션은 complierOption이라는 항목 안에 설정했다.  
+이는 target 옵션처럼 타입스크립트를 자바스크립트로 변환하는 과정이나 타입 검사 등에 이러한 아주 상세한 옵션들을 설정할 때에는 위와같이 compilerOption이라는 항목 안에 설정한다.
+</details>
+<br>
