@@ -288,3 +288,129 @@ include 옵션과는 달리 target 옵션은 complierOption이라는 항목 안�
 이는 target 옵션처럼 타입스크립트를 자바스크립트로 변환하는 과정이나 타입 검사 등에 이러한 아주 상세한 옵션들을 설정할 때에는 위와같이 compilerOption이라는 항목 안에 설정한다.
 </details>
 <br>
+
+## Module 옵션
+<details>
+<summary>펼치기/접기</summary>
+
+<br>
+변환되는 자바스크립트 코드의 모듈 시스템을 설정하는 옵션이다.    
+자바스크립트의 모듈 시스템에는 대표적으로 `CommonJS(CJS)`와 `ES 모듈 시스템(ESM)`이 있다.
+
+### [CommonJS 래퍼런스](https://nodejs.org/api/modules.html)
+
+- CommonJS - 모듈 불러오기
+  ```js
+  const 모듈 = require("./모듈")
+  ```
+
+- CommonJS - 모듈 내보내기
+  ```js
+  module.exports {
+  }
+  ```
+
+
+### [ES 모듈 시스템 래퍼런스](https://reactjs.winterlood.com/4683fda0-82e5-452f-98fe-a3aab428d2b7)
+- ES 모듈 시스템 - 모듈 불러오기
+  ```js
+  import 모듈 from "./모듈"
+  ```
+
+- ES 모듈 시스템 - 모듈 내보내기
+  ```js
+  export default {
+  }
+  ```
+
+### tsconfig.json module 옵션 설정
+
+#### CommonJS로 설정
+- tsconfig.json
+  ```json
+  {
+    "compilerOptions": {
+      "target": "ESNext",
+	  "module": "CommonJS" /* module - CommonJS */
+    },
+    "include": ["src"]
+  }
+  ```
+
+- config-exam/module/exm/export.ts
+  ```ts
+  export const hello = () => {
+    console.log("hello");
+  }
+  ```
+
+- config-exam/module/exm/import.ts
+  ```ts
+  import { hello } from './esmExport';
+  hello();
+  ```
+
+참고로 타입스크립트에서는 import를 통해서 모듈에서 값을 불러오고, Export를 통해서 모듈에서 값을 내보낼 수 있다.  
+이는 자바스크립트의 ES 모듈 시스템과 똑같다고 생각하면 된다.  
+
+- tsc 컴파일
+  ```
+  tsc
+  ```
+
+- config-exam/module/exm/import.js
+  ```js
+  "use strict";
+  Object.defineProperty(exports, "__esModule", { value: true });
+  const export_1 = require("./export");
+  (0, export_1.hello)();
+  ```
+독특한 코드가 생성된 것을 확인할 수 있다.  
+코드를 보면 require나 exports처럼 ES 모듈 시스템이 아니라 Common.js 모듈 시스템의 키워드들이 들어있다.  
+
+앞서 tsconfig.json에 module 옵션을 CommonJS로 설정했기 때문에 변환되는 자바스크립트 코드의 모듈 시스템이 CommonJS로 설정이 된것이다.  
+
+- config-exam/module/exm/export.js
+  ```js
+  "use strict";
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.hello = void 0;
+  const hello = () => {
+      console.log("hello");
+  };
+  exports.hello = hello;
+  ```
+
+#### ESNext로 설정
+
+- tsconfig.json
+   ```json
+  {
+    "compilerOptions": {
+      "target": "ESNext",
+	    "module": "ESNext", /* module - ESNext */
+    },
+    "include": ["src"]
+  }
+  ```
+
+- config-exam/module/exm/export.ts
+  ```ts
+  export const hello = () => {
+    console.log("hello");
+  }
+  ```
+
+- config-exam/module/exm/import.ts
+  ```ts
+  import { hello } from './esmExport';
+  hello();
+  ```
+
+import와 export 즉, ES 모듈 시스템을 사용하는 자바스크립트 코드로 변환된 것을 확인할 수 있다.  
+이렇게 모듈 옵션을 설정해서 변환된 자바스크립트 코드의 모듈 시스템을 직접 설정할 수 있다.  
+이 옵션되 매우 중요하다.  
+이전의 Target 옵션과 비슷하게 개발자가 실제로 만드는 프로덕션이 무조건 ES 모듈 시스템이 지원되는 곳에서 동작하리라는 보장이 없기 때문이다.  
+그래서 만들어야 되는 프로젝트의 상황에 따라 환경에 따라 모듈 옵션을 잘 조정해서 적절하게 모듈 시스템을 조정해야 한다.  
+</details>
+<br> 
