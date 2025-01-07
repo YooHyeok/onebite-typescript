@@ -414,3 +414,56 @@ import와 export 즉, ES 모듈 시스템을 사용하는 자바스크립트 코
 그래서 만들어야 되는 프로젝트의 상황에 따라 환경에 따라 모듈 옵션을 잘 조정해서 적절하게 모듈 시스템을 조정해야 한다.  
 </details>
 <br> 
+
+## OutDir 옵션
+<details>
+<summary>펼치기/접기</summary>
+
+<br>
+TSC로 타입스크립트 코드들을 컴파일 하면 컴파일 결과가  src 디렉토리 내 그대로 생겨버린다.   
+실제 실무를 할때는 파일이 굉장히 많기 때문에 굉장히 불편하다.  
+컴파일 결과로 생성된 자바스크립트 코드는 직접 수정하는 코드도 아니다.
+
+이럴 때 사용하는 옵션이 outDir 옵션이다.
+
+- tsconfig.json
+  ```json
+  {
+    "compilerOptions": {
+      "target": "ESNext",
+	    "module": "ESNext",
+	    "outDir": "dist" /* outDir 옵션 추가 */
+    },
+    "include": ["src"]
+  }
+  ```
+
+outDir 옵션의 value 값으로는 컴파일 결과가 생성될 자바스크립트 파일들이 어디에 위치할지에 대한 디렉토리명을 작성하면 된다.  
+
+dist라는 디렉토리로 설정한다.
+
+#### [컴파일 전]
+📂onebite-typescript   
+┃ ┠ 📂 section01  
+┃ ┃ ┠ 📂 node_modules  
+┃ ┃ ┠ 📂 src  
+┃ ┃ ┃ ┖ 📄index.ts  
+
+- tsc 컴파일 명령
+  ```bash
+  tsc
+  ```
+
+#### [컴파일 후]
+📂onebite-typescript   
+┃ ┠ 📂 section01  
+┃ ┃ ┠ 📂 dist
+┃ ┃ ┃┖ 📄index.js   
+┃ ┃ ┠ 📂 node_modules  
+┃ ┃ ┠ 📂 src  
+┃ ┃ ┃ ┖ 📄index.ts  
+
+위와 같이 outDir 옵션을 설정하면 컴파일 결과로 생성되는 코드를 직접 작성하는 코드 영역에서 분리할 수 있다.
+
+</details>
+<br>
