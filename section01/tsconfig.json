@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    // "target": "ES5"
+    // "target": "ES5",
     "target": "ESNext",
-    // "module": "CommonJS" /* module - CommonJS */
-    "module": "ESNext" /* module - ESNext */
+    // "module": "CommonJS", /* module - CommonJS */
+    "module": "ESNext", /* module - ESNext */
+    "outDir": "dist" /* outDir 옵션 추가 */
   },
   "include": ["src"]
 }
