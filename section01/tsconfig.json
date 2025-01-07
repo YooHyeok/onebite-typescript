@@ -5,7 +5,8 @@
     // "module": "CommonJS", /* module - CommonJS */
     "module": "ESNext", /* module - ESNext */
     "outDir": "dist", /* outDir 옵션 추가 */
-    "strict": true /* 엄격한 타입 체크 */
+    "strict": true, /* 엄격한 타입 체크 */
+    "moduleDetection": "force"
   },
   "include": ["src"]
 }
