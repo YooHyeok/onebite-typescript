@@ -666,13 +666,13 @@ node에서 오류가 발생했고, ES모듈을 로드하려면 "type": "module"�
 자바스크립트의 경우 node.js에서 ES 모듈 시스템을 사용하려면 package.json에 "type": "module"을 설정해야된다.
 
 - package.json
-    ```
-    {
-     /* 프로젝트 옵션 생략 */
-     "type": "module", /* <===== 옵션 추가 */
-     "dependencies": {/* 생략 */}
-    }
-    ```
+  ```json
+  {
+    /* 프로젝트 옵션 생략 */
+    "type": "module", /* <===== 옵션 추가 */
+    "dependencies": {/* 생략 */}
+  }
+  ```
     
 
 위와같이 설정한 뒤 다시 ts-node 명령을 실행할 경우 또 한번의 에러 메시지를 당면하게 된다.
@@ -695,14 +695,24 @@ node.js가 해석하도록 "type": "module" 설정을 했지만 ts-node는 여�
 그래서 이런 경우에는 tsconfig.json에 가서 ts-node에 대한 옵션을 추가해주면 된다.
 
 - tsconfig.json 
-    ```
-    {
-      "compilerOptions": {},
-      "ts-node": {
-        "esm": true
-      }
-    }
-    ```
+  ```json
+  {
+    "compilerOptions": {
+      // "target": "ES5",
+      "target": "ESNext",
+      // "module": "CommonJS", /* module - CommonJS */
+      "module": "ESNext", /* module - ESNext */
+      "outDir": "dist", /* outDir 옵션 추가 */
+      "strict": true, /* 엄격한 타입 체크 */
+      "moduleDetection": "force"
+    },
+    /* ts-node 옵션: 20 lts 버전의 경우 package.json에 "type": "module" 옵션과 함께 사용 */
+    "ts-node": {
+      "esm": true // <===== 옵션 추가
+    },  
+    "include": ["src"]
+  }
+  ```
     
 
 위 설정은 node 버전을 LTS 버전으로 낮추었을 경우에 해당한다.  
@@ -714,3 +724,38 @@ v20.11.1 버전의 node를 사용하는 필자의 경우에는 설정이 빈 {} 
 [참조 레퍼런스](https://hi-rachel.tistory.com/185)
 
 </details>  
+
+## SkipLibCheck 옵션 (undici-types 관련 에러)
+
+<details><summary>펼치기/접기</summary>  
+
+@types 버전이 20버전 이상으로 업데이트 되면서 특정 라이브러리에서 타입 검사 오류가 발생하고 있다.  
+따라서 tsconfig.json 파일에서 compilerOption 내부에 skibLibCheck 옵션을 추가해야 한다.
+
+- tsconfig.json
+  ```json
+  {
+    "compilerOptions": {
+      // "target": "ES5",
+      "target": "ESNext",
+      // "module": "CommonJS", /* module - CommonJS */
+      "module": "ESNext", /* module - ESNext */
+      "outDir": "dist", /* outDir 옵션 추가 */
+      "strict": true, /* 엄격한 타입 체크 */
+      "moduleDetection": "force",
+      "skipLibCheck": true
+    },
+    /* ts-node 옵션: 20 lts 버전의 경우 package.json에 "type": "module" 옵션과 함께 사용 */
+    /* "ts-node": {
+      "esm": true
+    }, */ 
+    "include": ["src"]
+  }
+  ```
+    
+
+위 옵션의 경우 타입 정의 파일(.d.ts 확장자를 갖는 파일을 의미한다.)의 타입 검사를 생략하는 옵션이다.  
+보통 타입 정의 파일은 라이브러리에서 사용하는데 가끔 라이브러리의 타입 정의 파일에서 타입 오류가 발생할 수 있다.  
+따라서 해당 옵션을 true로 설정하여 불필요한 정의 파일의 타입 검사를 생략하도록 설정한다.
+
+</details>
