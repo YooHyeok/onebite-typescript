@@ -631,3 +631,86 @@ tsconfig.json에서 옵션을 통해 moduleDetection 옵션을 force 값으로 �
 
 </details>
 <br>
+
+## ts-node 옵션 (TSX를 사용할 경우 생략)
+
+<details><summary>펼치기/접기</summary>  
+
+만약 tsconfig.json의 module 옵션을 CommonJS가 아닌 ESNext로 설정해 준 다음 ts-node를 실행하면 오류가 발생한다.
+
+REAEDME.md 의 Install 부분에 node.js 20 버전부터 동작하지 않는다고 적어놨으나, 아래와 같이  
+오류가 발생한다.
+
+```text/plain
+(node:24712) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+C:\Programming\workspace_vs\onebite-typescript\section01\src\index.ts:3
+export {};
+^^^^^^
+
+SyntaxError: Unexpected token 'export'
+    at internalCompileFunction (node:internal/vm:77:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1288:20)
+    at Module._compile (node:internal/modules/cjs/loader:1340:27)
+    at Module.m._compile (C:\Users\yjou7\AppData\Roaming\npm\node_modules\ts-node\src\index.ts:1618:23)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\yjou7\AppData\Roaming\npm\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)
+    at phase4 (C:\Users\yjou7\AppData\Roaming\npm\node_modules\ts-node\src\bin.ts:649:14)
+```
+
+export {} 를 이해하지 못하는것을 확인할 수 있다.  
+node에서 오류가 발생했고, ES모듈을 로드하려면 "type": "module"을 package.json에 정의하라고 나온다.  
+자바스크립트의 경우 node.js에서 ES 모듈 시스템을 사용하려면 package.json에 "type": "module"을 설정해야된다.
+
+- package.json
+    ```
+    {
+     /* 프로젝트 옵션 생략 */
+     "type": "module", /* <===== 옵션 추가 */
+     "dependencies": {/* 생략 */}
+    }
+    ```
+    
+
+위와같이 설정한 뒤 다시 ts-node 명령을 실행할 경우 또 한번의 에러 메시지를 당면하게 된다.
+
+```
+TypeError: Unknown file extension ".ts" for C:\Programming\workspace_vs\onebite-typescript\section\src\index.ts
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:160:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:203:36)
+    at defaultLoad (node:internal/modules/esm/load:143:22)
+    at async ModuleLoader.load (node:internal/modules/esm/loader:409:7)
+    at async ModuleLoader.moduleProvider (node:internal/modules/esm/loader:291:45)
+    at async link (node:internal/modules/esm/module_job:76:21) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+```
+
+타입스크립트 파일 자체를 이해못하는 기상천외한 오류이다.  
+이 오류가 발생한 이유는 ts-node가 ES 모듈 시스템을 해석하지 못해서 그렇다.  
+node.js가 해석하도록 "type": "module" 설정을 했지만 ts-node는 여전히 ES 모듈 시스템을 이해할 수 없다.  
+그 이유는 기본적으로 ts-node가 기본적으로 CommonJS 모듈시스템을 사용하기 때문에 그렇다.  
+그래서 이런 경우에는 tsconfig.json에 가서 ts-node에 대한 옵션을 추가해주면 된다.
+
+- tsconfig.json 
+    ```
+    {
+      "compilerOptions": {},
+      "ts-node": {
+        "esm": true
+      }
+    }
+    ```
+    
+
+위 설정은 node 버전을 LTS 버전으로 낮추었을 경우에 해당한다.  
+v20.11.1 버전의 node를 사용하는 필자의 경우에는 설정이 빈 {} 형태의 tsconfig.json 파일만 만들어 두거나 compilerOptions의 module 옵션을 "CommonJS"로 설정하면 위 설정과 상관 없이 해당 오류는 발생하지 않는다.
+
+이는 앞서 말했던 설명중 ts-node가 기본적으로 CommonJS 모듈시스템을 사용하기 때문이다.
+여기서 한가지 알 수 있는점은, tsconfig.js에 module옵션을 설정하지 않을 경우 타입스크립트 컴파일러는 자동으로 CommonJS 모듈시스템을 따른다는 점이다.
+
+[참조 레퍼런스](https://hi-rachel.tistory.com/185)
+
+</details>  
