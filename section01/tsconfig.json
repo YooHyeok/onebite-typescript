@@ -8,5 +8,9 @@
     "strict": true, /* 엄격한 타입 체크 */
     "moduleDetection": "force"
   },
+  /* ts-node 옵션: 20 lts 버전의 경우 package.json에 "type": "module" 옵션과 함께 사용 */
+  /* "ts-node": {
+    "esm": true
+  }, */ 
   "include": ["src"]
 }
