@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", /* 컴파일 결과인 자바스크립트 코드가 사용할 자바스크립트 버전*/
+    "module": "ESNext", /* 컴파일 결과인 자바스크립트 코드가 사용할 모듈 시스템 버전 */
+    "outDir": "dist", /* 컴파일 결과인 자바스크립트 코드가 위치할 디렉토리 */
+    "strict": true, /* 엄격한 타입 검사 */
+    "moduleDetection": "force" /* 모든 타입스크립트 파일들을 개별 모듈로 취급 */
+  },
+  "include": ["src"] /* tsc 대상 디렉토리 */
+}
