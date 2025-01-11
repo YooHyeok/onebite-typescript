@@ -7,5 +7,8 @@
     "moduleDetection": "force", /* 모든 타입스크립트 파일들을 개별 모듈로 취급 */
     "skipLibCheck": true /* undici-types 에러 */
   },
+  "ts-node": {
+    "esm": true
+  },
   "include": ["src"] /* tsc 대상 디렉토리 */
 }
