@@ -153,6 +153,157 @@ Node.js가 CommonJS 환경에서 실행되면 타입스크립트의 ESM 구문�
 </details>
 <br>
 
+# 원시타입과 리터럴타입
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+## 원시타입 (Primitive Type) 이란?
+동시에 딱 하나의 값만 저장할 수 있는 타입을 말한다.  
+예를들어 원시타입이 아닌 배열이나 객체와 같은 비원시타입은 여러개의 값들을 저장할 수 있다.  
+반면에 number, string, boolean, null, undefined 같은 원시타입들은 숫자면 숫자, 문자열이면 문자열 등, 딱 하나의 값만 저장할 수 있는 타입이다.  
+
+
+### 종류
+1. number
+2. string
+3. boolean
+4. null
+5. undefined
+
+### number타입  
+  자바스크립트에서 숫자를 의미하는 모든 값을 포함하는 타입이다.
+- chapter1.ts
+  ```ts
+  /* 1. number 타입 */
+  let num1: number = 123; // 양의 정수
+  let num2: number = -123; // 음의 정수
+  let num3: number = 0.123; // 양의소수
+  let num4: number = -0.123; // 음의 소수
+  let num5: number = Infinity; // 양의 무한대
+  let num6: number = -Infinity; // 음의 무한대
+  let num7: number = NaN; // Not A Number
+    
+  num1 = 'hello'; // Type 'string' is not assignable to type 'number'.
+  ```
+  위와 같이 변수의 이름 뒤에 콜론(:)을 쓰고 타입을 작성하여 변수의 타입을 정의하는 문법을 타입스크립트에서는 타입 주석 또는 타입 어노테이션이라고 부른다.  
+  ```ts
+  /* 1. number 타입 */
+  let num1: number = 123; // 양의 정수
+  num1 = 'hello'; // Type 'string' is not assignable to type 'number'.
+  ```
+  만약 위처럼 문자열로 초기화 하게 되면, 오류가 난다.
+  ```ts
+  /* 1. number 타입 */
+  let num1: number = 123; // 양의 정수
+  num1.toUpperCase(); // Property 'toUpperCase' does not exist on type 'number'.
+  ```
+  문자열에만 적용할 수 있는 문자열 전용 메소드도 사용할 수 없다.
+
+  ```ts
+  /* 1. number 타입 */
+  let num1: number = 123; // 양의 정수
+  num1.toFixed();
+  ```
+  숫자에만 사용 가능한 메소드 정상 호출이 가능하다.
+
+### string타입
+- chapter1.ts
+  ```ts
+  /* 2. string 타입 */
+  let str1: string = "hello" // 쌍따옴표 문자열
+  let str2: string = 'hello' // 홑따옴표 문자열
+  let str3: string = `hello` // 벡틱 문자열
+  let str4: string = `hello ${num1}` // template literal도 string 타입에 포함된다.
+  ```
+  마찬가지로 `str1 = 123;` 처럼 정수로 초기화 하게 되면 오류가 나며, `str1.toFixed();` 과 같이 코드를 선언하게 되면 숫자에만 적용할 수 있는 숫자 전용 메소드를 사용할 수 없게 된다. 
+  
+### boolean타입
+- chapter1.ts
+  ```ts
+  /* 3. boolean 타입 */
+  let bool1: boolean = true;
+  let bool2: boolean = false;
+  ```
+  당연히 문자열이나 숫자열을 저장하려고 하면 오류가 발생한다.  
+
+### null타입
+- chapter1.ts
+  ```ts
+  /* 4. null 타입 */
+  let null1: null = null;
+  ```
+  null값 이외에는 다른값을 저장할 수 없게 된다.
+- 
+### undefined타입
+- chapter1.ts
+  ```ts
+  /* 5. undefined 타입 */
+  let unde1: undefined = undefined;
+  ```
+  
+null과 undefined는 타입스크립트에서 별도의 타입으로 존재하기 때문에 변수의 타입으로 정의할 수 있다.
+
+### strictNullChecks (엄격한 null체크) 컴파일 옵션
+한가지 생각해 볼 법한 주제가 있다.  
+`let numA: number = null;` 코드처럼 자바스크립트의 경우 지금 당장 넣을 값이 없는경우 null로 초기화 하지만, 타입스크립트에서는 이를 허용하지 않는다.  
+null이라는 값은 null타입이 별도로 존재하고 number타입 안에 포함되는 값이 아니기 때문이다.  
+만약 정말 중간에 저장할 값이 없어서 어쩔수 없이 잠깐 null이라도 넣어야하는 상황이 있을 수 있다.  
+이 경우 컴파일러 옵션을 조절하여 임시로 null값을 저장할 수 있는 방법이 존재한다.  
+
+- tsconfig.json
+  ```json
+  {  
+    "strict": true,
+    "strictNullChecks": false
+  }
+  ```
+  
+- Restart TS Server  
+  Ctrl + Shift + P > restart 검색 > Restart TS Server
+
+strictNullChecks 옵션은 이름에서 알 수 있듯이, 엄격한 null 검사 옵션이다.
+엄격하게 null을 검사한다는것은 쉽게 말해 null타입이 아닌 변수에 null값을 할당하는것을 허용할 것인지에 대해 결정하는 옵션이다.  
+이 옵션을 false로 적용하게 되면 null타입이 아닌 number타입의 변수에도 null을 임시로 넣을 수 있게 설정해 줄 수 있는 것이다.
+개발하고 있는 상황에 따라 변수에 null값을 임시로 넣어야 하는 상황이 많다면 strictNullChecks 옵션을 끄고 개발 할 수 있다.
+옵션을 따로 명시적으로 선언하지 않을경우 해당 옵션의 기본값은 true로 엄격하게 null을 검사하도록 적용된다.
+strict옵션이 strictNullChecks 옵션의 상위 옵션이다.
+기본적으로 strict옵션이 켜져있으면 strictNullChecks 옵션도 따라서 켜지고, 만약 strict옵션이 꺼져있으면 strictNullChecks옵션도 함께 꺼진다.  
+위 컴파일 설정 예제에서는 strict옵션이 켜져있고 strictNullChecks옵션은 개발자가 명시적으로 꺼놨기 때문에 이 경우 strict는 켜져있으나 strictNullchecks옵션은 꺼져있게 된다.  
+
+(옵션을 끄는 방법은 역순으로 지운뒤 Restart TS Server를 실행하면 된다.)
+
+## 리터럴(literal)타입
+
+타입스크립트에서는 number나 string처럼 여러 형태의 값을 포함하는 타입 뿐만아니라, 딱 하나의 값만 포함하는 리터럴(literal)이라는 독특한 타입이 존재한다.
+리터럴(값) 타입이란 값 그 자체가 타입이 되는 유형의 타입들이다.  
+예를들어 `let numB: 10 = 10;` 코드처럼 numB라는 변수의 타입을 number가 아닌 값 10으로 정의한다.  
+이렇게 변수의 타입을 값 그 자체로 정의하면, 정의한 값 외에는 다른 값을 저장할 수 없다.  
+10이라는 값만 허용하는 타입을 만든셈이다.  
+숫자 타입 말고도 다른 타입들도 리터럴 타입으로 정의가 가능하다.
+
+### string literal
+- chapter1.js
+  ```ts
+  let strA: "hello" = "hello";
+  strA = "df" // Type '"df"' is not assignable to type '"hello"'. 
+  ```
+  위와 같이 문자열 hello라는 값의 리터럴 타입의 변수 strA를  선언한 후, 해당 변수에 다른 문자열 값인 "df"로 초기화시 오류가 발생하게 된다.
+
+### boolean literal
+- chapter1.js (boolean literal)
+  ```js
+  let boolA: true = true;
+  boolA = false; // Type 'false' is not assignable to type 'true'
+  let boolB: true = false; // Type 'false' is not assignable to type 'true'.
+  ```
+  3번째 라인 코드처럼 리터럴 타입을 선언함과 동시에 리터럴 타입과 다른 값을 저장할 경우에도 오류가 발생한다.  
+
+타입스크립트의 리터럴 타입은 원시타입 안에 포함되는 값 중 하나를 마치 타입인것과 같이 정의해서 사용할 수 있다.
+리터럴 타입은 복합적인 타입들을 만들 때 굉장히 유용하게 사용되기 때문에 알아두는것이 좋다.
+</details>
+<br>
+
 # 템플릿
 <details>
 <summary>펼치기/접기</summary>
