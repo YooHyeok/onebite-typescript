@@ -304,6 +304,134 @@ strict옵션이 strictNullChecks 옵션의 상위 옵션이다.
 </details>
 <br>
 
+# 배열과 튜플
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+## 배열 타입
+
+### Type[] - 인덱스 기호 방식 타입
+- src/chapter2.ts
+  ```ts
+  let numArr: number[] = [1, 2, 3]; // 1. Type[] - 인덱스 기호 방식 배열 타입
+  let strArr: string[] = ["hello", "im", "yooHyeokSchool"];
+  ```
+
+## Array<Type> - 제네릭 타입 방식의 배열 타입
+- src/chapter2.ts
+  ```ts
+  let boolArr: Array<boolean> = [true, false, true]; // 2. Array<Type> - 제네릭 타입 방식의 배열 타입 정의
+  ```
+
+## 다양한 타입의 요소로 구성된 배열의 배열타입
+변수의 타입을 어떻게 정의해야 될지 잘 모르겠을 때에는 마우스 커서를 변수에 올려본다.  
+이전에 설명했던 타입추론 즉, 타입스크립트는 점진적 타입 시스템을 사용하기 때문에 변수의 타입을 초기화하는 값을 기준으로 자동으로 추론한다.  
+따라서 IDE의 도움을 받아 추론된 타입을 확인한다.  
+let multiArr: (string | number | boolean)[] 와 같이 알려주는데 여기서 소괄호는 요소의 타입이고, 대괄호는 배열이다.  
+소괄호 안에 string | number | bollean 이라고 되어있는데, 여기서 | 바를 사용하는것을 유니온타입이라고 부르며,  
+이는 배열의 요소가 string이나 number나 boolean일 수 있다는 의미로 이렇게 유연한 타입을 만들 수 있다. 
+- src/chapter2.ts
+  ```ts
+  let multiArr: (number | string | boolean)[] = [1, "hello", true];
+  ```
+
+## 다차원 배열 타입
+ 다차원 배열이란?  
+ 배열 안에 배열, 배열 안에 배열 안에 배열 과 같이 2차원이거나 3차원 배열을 의미한다.  
+ 타입을 정의하는 방법은 요소들의 타입을 적고, 대괄호를 두번 기제한다.  
+- src/chapter2.ts
+  ```ts
+  let doubleArr: number[][] = [
+    [1, 2, 3],
+    [4, 5]
+  ]
+  ```
+## 튜플 타입
+
+튜플이란?  
+자바스크립트에는 없고 타입스크립트에서만 특별하게 제공되는 타입으로 길이와 타입이 고정된 배열을 말한다.  
+자바스크립트의 배열은 기본적으로 길이와 타입 모두 고정되어 있지 않다.  
+따라서 개수를 마음대로 늘릴 수도 있고 배열에 들어가는 요소의 타입도 자유롭다.  
+그리고 타입스크립트의 배열은 배열에 들어가는 요소의 타입은 고정시킬 수 있지만 길이까지 고정시킬 수는 없다.  
+튜플은 타입도 고정하지만 길이까지 고정할 수 있는 그런 배열 타입을 의미한다.  
+
+- src/chapter2.ts
+  ```ts
+  let tup1: [number, number] = [1, 2] // 오직 number 타입
+  tup1 = [1, 2, 3] // Error: Type '[number, number, number]' is not assignable to type '[number, number]'. Source has 3 element(s) but target allows only 2.
+  tup1 = ["1", "2"] // Error: Type 'string' is not assignable to type 'number'.
+  ```
+튜플의 타입을 정의하는 방법은 각 요소들의 타입을 대괄호 안에 배열 형태로 나열한다.  
+이렇게 튜플 타입을 정의할 경우 처럼 튜플 타입의 길이를 넘어서는 배열도 저장할 수 없으며,  
+길이를 만족하더라도 타입을 만족하지 않는 배열도 저장할 수 없다.  
+
+만약 타입이 서로 다른 튜플을 정의할 경우 타입의 순서가 다르게 초기화 하거나, 역시 길이가 다르면 오류가 발생하게 된다.
+- src/chapter2.ts
+  ```ts
+  let tup2: [number, string, boolean] = [1, "2", true] // 튜플 타입 정의: 각 요소의 타입을 배열형태로 정의한다.
+  tup2 = ["2", 1, true] // Error: Type 'string' is not assignable to type 'number' / Type 'number' is not assignable to type 'string'.
+  ```
+
+
+사실 튜플은 별도로 존재하는 자료형이라 보기 어렵고, 그냥 배열이다.
+- src/chapter2.ts
+  ```ts
+  let tup1: [number, number] = [1, 2];
+  let tup2: [number, string, boolean] = [1, "2", true];
+  ```
+- tsc 컴파일 - dist/index.js
+  ```js
+  let tup1 = [1, 2];
+  let tup2 = [1, "2", true];
+  export {};
+  ```
+위와 같이 tsc로 컴파일 하고 결과를 보게되면, 결국 자바스크립트 코드로 컴파일 되어 변환될때는 배열로 변환된다는것을 확인할 수 있기 때문이다.  
+
+또한, 튜플 타입으로 정의된 배열에 배열의 메소드를 활용하여 push를 하거나 pop을 할 때에는 튜플의 길이 제한이 발동하지 않는다.
+따라서 튜플 타입을 사용할 때에는 배열 메소드를 사용해서 push나 pop과 같이 요소를 추가하거나 제거할 때에는 각별히 주의해서 사용해야한다.
+- src/chapter2.ts
+  ```ts
+  let tup2: [number, string, boolean] = [1, "2", true]
+  tup2.push("메롱")
+  ```
+
+
+### 튜플을 유용하게 사용할 수 있는 예제
+- src/chapter2.ts
+  ```ts
+  const user = [
+    ["유혁", 1],
+    ["스쿨", 2],
+    ["홀리", 3],
+    ["몰리", 4],
+    [5, "초이"] // 해당 요소의 0번 인덱스에 toUpperCase()를 적용한다면, 오류가 발생할것이다.
+  ]
+  ```
+위 배열 형태를 보면, 2차원 배열의 첫번쨰 요소로 이름, 두번째 요소로 인덱스를 규칙적으로 사용하고 있다.
+그러나 눈치 없는 동료 개발자가 해당 배열에 첫번째 요소로 인덱스를, 두번째 요소로 이름을 넣게 될 경우 
+만약 해당 요소의 0번 인덱스에 toUpperCase()를 적용한다면, 오류가 발생할것이다.
+
+이러한 상황은 튜플 타입을 정의하여 미연에 방지할 수 있다.
+
+- src/chapter2.ts
+  ```ts
+  const user: [string, number][] = [
+    ["유혁", 1],
+    ["스쿨", 2],
+    ["홀리", 3],
+    ["몰리", 4],
+    [5, "초이"] // Error: Type 'number' is not assignable to type 'string' | Type 'string' is not assignable to type 'number'
+  ]
+  ```
+
+위 예제 코드와 같이 `[string, number][]` 의 형태로 첫번째 요소는 문자열, 두번째 요소는 숫자로 정의해준다.  
+(이는 일반적인 배열 버킷 구조와 반대되는 순서로 보일 수 있다.)
+결론적으로, 튜플을 사용하면 배열을 사용할 때 인덱스의 위치에 따라서 넣어야 하는 값들이 이미 정해져 있고, 그 순서를 지키는 게 중요할 때 
+값을 잘못 넣지 않도록 방지해 줄 수 있다.
+</details>
+<br>
+
 # 템플릿
 <details>
 <summary>펼치기/접기</summary>
