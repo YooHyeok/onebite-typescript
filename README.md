@@ -119,7 +119,7 @@ tsc -v
 
 ### node를 통한 js 실행
   ```bash
-  node src/index.ts
+  node src/index.js
   ```
 
 #### 터미널 출력내용 확인
@@ -188,3 +188,10 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 <br>
 
 # [Section02 타입스크립트 개론.md](Section02%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EA%B0%9C%EB%A1%A0.md)
+<br>
+
+# [Section02 타입스크립트 컴파일러 옵션 설정.md](Section02%20%C5%B8%C0%D4%BD%BA%C5%A9%B8%B3%C6%AE%20%C4%C4%C6%C4%C0%CF%B7%AF%20%BF%C9%BC%C7%20%BC%B3%C1%A4.md)
+<br>
+
+# [Section03 타입스크립트 기본.md](Section03%20%C5%B8%C0%D4%BD%BA%C5%A9%B8%B3%C6%AE%20%B1%E2%BA%BB.md)
+
