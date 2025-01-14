@@ -542,6 +542,312 @@ id프로퍼티는 있어도 되고 없어도 되는 선택적인 프로퍼티이
 </details>
 <br>
 
+# 타입 별칭과 인덱스 시그니처
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+## 타입별칭
+변수를 정의하는 것과 같이 타입에 별칭을 주어 정의하는 방식이다.  
+만약 여러개의 프로퍼티로 구성된 객체가 하나 있고, 동일한 타입의 프로퍼티로 구성된 객체를 반복해서 선언할 경우 코드가 굉장히 길어진다.  
+이런 경우에 마치 변수를 선언하는것 처럼 타입을 별칭으로 먼저 정의한 후 각각의 객체에 타입 어노테이션으로 해당 별칭을 적용하면 타입 재사용이 가능해지며,  
+불필요한 코드라인을 절약할 수 있다.  
+
+### 타입별칭 예제
+
+#### AS-IS
+- src/chapter4.ts
+  ```ts
+  let user: {
+    id: number;
+    name: string;
+    nickname: string;
+    birth: string;
+    bio: string;
+    location: string;
+  } = {
+    id: 1,
+    name: "유재혁",
+    nickname: "유혁스쿨",
+    birth: "1992.10.23",
+    bio: "안녕하세요",
+    location: "광명시"
+  }
+  let user2: {
+    id: number;
+    name: string;
+    nickname: string;
+    birth: string;
+    bio: string;
+    location: string;
+  } = {
+    id: 2,
+    name: "홍길동",
+    nickname: "유혁스쿨",
+    birth: "1992.10.23",
+    bio: "안녕하세요",
+    location: "광명시"
+  }
+  ```
+  위 코드를 보면 벌써부터 페이지의 절반을 차지한다.  
+  실제로 객체의 타입을 보면 동일하게 반복되는것을 볼 수 있다.  
+  이제 이 코드들에 타입 별칭을 적용해본다.  
+
+#### TO-BE
+- src/chapter4.ts
+  ```ts
+  type User = { // 타입 별칭 선언시 type 키워드를 통해 선언한다.
+    id: number;
+    name: string;
+    nickname: string;
+    birth: string;
+    bio: string;
+    location: string;
+    // extra: string; // property 추가시 User 별칭을 타입으로 정의한 모든 객체에 적용됨
+  }
+
+  let user3:User  = {
+    id: 1,
+    name: "유재혁",
+    nickname: "유혁스쿨",
+    birth: "1992.10.23",
+    bio: "안녕하세요",
+    location: "광명시"
+  }
+  let user4:User = {
+    id: 2,
+    name: "홍길동",
+    nickname: "유혁스쿨",
+    birth: "1992.10.23",
+    bio: "안녕하세요",
+    location: "광명시"
+  }
+  ```
+  코드를 보면, `type` 이라는 키워드를 통해 타입별칭을 통해 객체의 타입을 별칭으로 딱 한번 정의하고, 정의한 타입별칭을 타입어노테이션에 정의하여 중복되는 코드를 줄였다.  
+  이렇게 타입별칭을 사용하면 한가지 장점이 더 존재한다.  
+  만약 이렇게 타입별칭으로 타입을 공통으로 정의한 모든 객체가 새로운 프로퍼티가 필요할 경우 타입별칭에 한번만 추가로 선언해주면,  
+  타입별칭을 적용한 모든 객체에 해당 프로퍼티 타입이 공통적으로 적용된다.
+
+#### 새로운 프로퍼티 추가
+
+- src/chapter4.ts
+  ```ts
+  type User = {
+    id: number;
+    name: string;
+    nickname: string;
+    birth: string;
+    bio: string;
+    location: string;
+    extra: string; // property 추가시 User 별칭을 타입으로 정의한 모든 객체에 적용됨
+  }
+  ```
+
+#### 타입 중복 오류
+타입별칭은 이전에 설명했던것 처럼 마치 let 키워드로 선언하는 변수 처럼 중복된 이름으로 선언할 경우 오류가 난다.  
+- src/chapter4.ts
+  ```ts
+  type User = {
+   /* 생략 */ 
+  }
+  type User = {} // Duplicate identifier 'User'.
+  ```
+  따라서 타입별칭을 선언할 때 같은 스코프 내에서는 중복되지 않도록 주의해야한다.
+#### 타입 스코프(범위)
+함수 블록 내에서는 내부에 정의한 타입이 User 타입이 된다.  
+함수 바깥이라면 함수 바깥에 정의된 User 타입이 적용된다.
+- src/chapter4.ts
+  ```ts
+  type User = {/* 생략 */};
+  function func() {
+    type User = {/* 생략 */};
+  } 
+  ```
+#### 타입 별칭 컴파일 결과
+타입스크립트에 type 관련 코드들은 컴파일 결과 자바스크립트 코드에서는 모두 다 제거된다.  
+그렇기 때문에 타입 별칭으로 만든 타입들도 당연히 다 제거가 된다.  
+
+- 타입스크립트 컴파일
+  ```bash
+  tsc src/chapter4.ts
+  ```
+
+- 컴파일 확인: dist/chapter4.js   
+  ```js
+  let user3 = {
+    id: 1,
+    name: "유재혁",
+    nickname: "유혁스쿨",
+    birth: "1992.10.23",
+    bio: "안녕하세요",
+    location: "광명시"
+  };
+  let user4 = {
+      id: 2,
+      name: "홍길동",
+      nickname: "유혁스쿨",
+      birth: "1992.10.23",
+      bio: "안녕하세요",
+      location: "광명시"
+  };
+  function func() {
+  }
+  export {};
+  ```
+## 인덱스 시그니처
+key와 value의 규칙을 기준으로 객체의 type을 정의할 수 있는 문법을 말한다.
+
+
+- src/chapter4.ts
+  ```ts
+  type countryCodes = {
+    Korea: string;
+    UnitedState: string;
+    UnitedKingdom: string;
+  }
+  let countryCodes = {
+    Korea: 'ko',
+    UnitedState: 'us',
+    UnitedKingdom: 'uk'
+  }
+  ```
+
+### 상황 가정
+위 코드를 보면 현재 countryCodes객체는 3개의 프로퍼티밖에 없다.  
+만약 만들게 될 서비스가 초 거대 글로벌 서비스로 200개 가까운 모든 국가들의 코드를 다 넣어야 한다면 타입 별칭에도 모든 프로퍼티의 키를 다 넣어줘야 한다.  
+이 경우 객체의 프로퍼티의 key와 value의 타입 관련된 규칙을 본다.  
+key는 모두 string타입이며 value도 모두 string 타입이다.  
+key가 string타입이고 value가 string타입인 프로퍼티들은 모두 허용하도록 타입을 만들면 어떤 국가를 추가하여도 문제가 되지 않게 된다.  
+이렇게 key와 value의 규칙을 기준으로 객체의 type을 정의할 수 있는 문법이 바로 인덱스 시그니처라는 문법이다.
+
+### 인덱스 시그니처 예제1
+대괄호 안에 key의 타입을 정의하고, 해당 배열에 콜론을 입력하고 타입을 정의하면 key의 타입이 된다.
+이렇게 key와 value의 타입을 기준으로 규칙을 이용하여 아주 유연하게 객체의 타입을 정의하는 문법을 인덱스 시그니처 라고 부른다.
+인덱스 시그니쳐를 이용하면 key와 value의 타입이 어떤 규칙을 가지고 움직이는 객체의 타입을 정의할 때 굉장히 유용하게 사용될 수 있다.
+
+#### 문자열 타입의 key와 문자열 타입의 value에 대한 객체 타입 지정
+- src/chapter4.ts
+  ```ts
+  type countryCode = {
+    [key: string]: string
+  }
+
+  let countryCodes2: countryCode = {
+    Korea: 'ko',
+    UnitedState: 'us',
+    UnitedKingdom: 'uk'
+  };
+  ```
+
+#### 문자열 타입의 key와 정수 타입의 value에 대한 객체 타입 지정
+- src/chapter4.ts
+  ```ts
+  type countryNumberCodes = {
+    [key: string]: number;
+  }
+  /* 국가별 숫자 코드 */
+  let countryNumberCodes: countryNumberCodes = { 
+    Korea: 410,
+    UnitedState: 840,
+    UnitedKingdom: 826
+  }
+  ```
+### 주의점 1  
+인덱스 시그니처 타입은 프로퍼티가 없는 빈 객체에도 사용이 가능하다.  
+인덱스 시그니처 타입은 타입 규칙을 위반하지만 않으면 모든 객체를 허용하는 타입이다.  
+아래 예제코드에서의 객체는 아무런 프로퍼티가 없는 객체이다.  
+규칙을 위반할 프로퍼티가 없는 셈이다.  
+
+- src/chapter4.ts
+  ```ts
+  type countryNumberCodes = { //인덱스 시그니처 정의
+    [key: string]: number;
+  }
+  let countryNumberCode: countryNumberCodes = {} // 프로퍼티를 정의하지 않아도 오류가 발생하지 않음.
+  ```
+
+### 인덱스 시그니처 필수 프로퍼티
+key가 string이고 value가 number면 모두 허용하지만 반드시 korea라는 number타입의 프로퍼티가 꼭 있어야 할 경우 
+아래의 예제코드와 같이 필수 프로퍼티에 대한 타입 지정을 추가해준다. 
+- src/chapter4.ts
+  ```ts
+  type countryNumberCodeRequiredKorea = {
+    [key: string]: number;
+    Korea: number; // 필수 프로퍼티에 대한 타입 지정
+  }
+  ```
+
+### 주의점 2
+인덱스 시그니처 정의 및 필수 프로퍼티 타입 정의시 빈 객체를 저장하면 문제가 발생한다.
+- src/chapter4.ts
+  ```ts
+  type countryRequiredKoreaNumberCode = {
+    [key: string]: number;
+    Korea: number; // 필수 프로퍼티 타입정의 추가
+  }
+  let countryCodeNumber: countryRequiredKoreaNumberCode = {} // Error: Property 'Korea' is missing in type '{}' but required in type 'countryNumberCode'.
+  ```
+따라서 만약 객체에 key가 string이고 value가 number면 모두 허용하지만 반드시 korea라는 number타입의 프로퍼티가 꼭 있어야 한다면 아래와 같이 
+꼭 있어야 하는 필수 프로퍼티에 대한 타입정의를 추가해 줄 경우 오류가 발생하지 않는다.
+- src/chapter4.ts
+  ```ts
+  type countryRequiredKoreaNumberCode = {
+    [key: string]: number;
+    Korea: number; // 필수 프로퍼티 타입정의 추가
+  }
+  let countryCodesNumber: countryRequiredKoreaNumberCode = {
+    Korea: 410 // 필수 프로퍼티만 추가
+  }
+  ```
+
+### 주의점 3
+인덱스 시그니처를 사용하는 객체 타입에서 필수로 추가해야할 프로퍼티를 정의하려면,   
+필수 프로퍼티의 value의 타입이 반드시 인덱스 시그니처의 value타입과 일치하거나 호환되야 한다.
+아래의 코드는 문자열, 숫자 코드 모두 허용할 경우에 대한 예제이다.
+- src/chapter4.ts
+  ```ts
+  type countryNumberAndStringCode = {
+    [key: string]: number;  
+    Korea: string; // Property 'Korea' of type 'string' is not assignable to 'string' index type 'number'
+  }
+  let countryCodesNumberAndStringa: countryNumberAndStringCode = { // Type '{ Korea: string; }' is not assignable to type 'countryNumberAndStringCode'.
+    Korea: "ko" // Property 'Korea' is incompatible with index signature. Type 'string' is not assignable to type 'number'.
+  }
+  ```
+ Korea라는 프로퍼티의 value타입이 string으로 되어있고, 인덱스 시그니처의 value의 타입은 number로 되어있기 때문에 문제가 발생한다.  
+
+#### 해결책 1 (타입 일치)
+인덱스 시그니처의 value타입과 필수 프로퍼티의 value타입을 반드시 일치시킨다.
+- src/chapter4.ts
+  ```ts
+  type countryNumberAndStringCodes = {
+    [key: string]: number;
+    Korea: number;
+  }
+
+  let countryCodeNumberAndString: countryNumberAndStringCodes = {
+    // Korea: "ko", // 인덱스 시그니처 특성상 사용할 수 없다.
+    Korea: 410 
+  }
+  ```
+
+#### 해결책 2 (유니온타입)
+유니온타입을 활용하여 인덱스 시그니처에 정수와 문자열에 대한 다중 타입을 허용해 보자 (강의에는 없는 내용)
+- src/chapter4.ts
+  ```ts
+  type countryStringAndNumberCode = {
+    [key: string]: number | string;
+    Korea: string;
+  }
+
+  let countryCodeStringAndNumber: countryStringAndNumberCode = {
+    Korea: "ko"
+  }
+  ```
+
+</details>
+<br>
+
 # 템플릿
 <details>
 <summary>펼치기/접기</summary>
