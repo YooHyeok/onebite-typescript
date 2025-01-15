@@ -165,3 +165,45 @@ type countryStringAndNumberCode = {
 let countryCodeStringAndNumber: countryStringAndNumberCode = {
   Korea: "ko"
 }
+
+/* 배열 타입에 대한 타입별칭과 인덱스 시그니처 */
+
+/* 숫자 타입 배열 타입별칭 */
+type NumberArr = number[];
+
+/* 문자열 타입 배열 타입별칭 */
+type StringArr = string[];
+
+/* 객체 타입 배열 타입별칭 */
+type Obj = {id: number; name: string};
+type ObjArr = Obj[];
+
+/* 배열 타입에 인덱스 시그니처 적용
+대괄호 안에 배열의 index에 대한 타입을 정의, 해당 배열에 타입을 정의하면 배열 요소의 타입이 된다.
+*/
+
+/* 정수 타입 배열 인덱스 시그니처 */
+type NumbersArr = {
+  [index: number]: number
+}
+let nubmersArr:NumbersArr = [1, 2, 3]
+
+/* 정수 타입 배열 인덱스 시그니처 */
+type StringsArr = {
+  [index: number]: string
+}
+let stringsArr:StringsArr = ["일", "이", "삼"]
+
+/* 배열 인덱스 시그니처 필수 타입 정의 
+인덱스 시그니처만 정의할 경우 배열의 push 메소드나 length같은 내장 기능을 사용할 경우 필수 타입으로 정의하지 않으면 오류가 발생한다.  
+*/
+type StringArray = {
+  [index: number]: string; // 숫자 인덱스 키의 값은 문자열
+  length: number; // length 속성 필수 타입 정의
+  push: (item: string) => number; // push 메소드 필수 타입 정의
+}
+
+let customArray: StringArray = ["hello", "world"];
+let result = customArray.push("!"); // 길이 반환
+console.log(result) // 3
+console.log(customArray.length); // 3
