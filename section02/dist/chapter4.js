@@ -69,4 +69,10 @@ let countryCodeNumberAndString = {
 let countryCodeStringAndNumber = {
     Korea: "ko"
 };
+let nubmersArr = [1, 2, 3];
+let stringsArr = ["일", "이", "삼"];
+let customArray = ["hello", "world"];
+let result = customArray.push("!"); // 길이 반환
+console.log(result); // 3
+console.log(customArray.length); // 3
 export {};
