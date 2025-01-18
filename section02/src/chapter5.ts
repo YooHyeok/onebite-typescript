@@ -117,12 +117,25 @@ enum Level {
   USER = 10,
   GUEST
 }
+const soldier1 = {
+  name: '유혁스쿨',
+  level: Level.ADMIN // 0: 관리자
+}
 
+const soldier2 = {
+  name: '홍길동',
+  level: Level.USER // 1: 일반유저
+}
+
+const soldier3 = {
+  name: '아무개',
+  level: Level.GUEST // 2: 게스트
+}
 /* tsx src/chapter5.ts */
-console.log(client1, client2, client3) // { name: '유혁스쿨', tier: 10 } { name: '홍길동', tier: 11 } { name: '아무개', tier: 12 }
+console.log(soldier1, soldier2, soldier3) // { name: '유혁스쿨', level: 0 } { name: '홍길동', level: 10 } { name: '아무개', level: 11 }
 
 /* 문자형 enum - 문자열 값 할당
-각 국가별의 언어를 열거하는 열거형 생성
+각 국가별 언어를 열거하는 열거형 생성
  */
 enum Language {
   korean = 'ko',
