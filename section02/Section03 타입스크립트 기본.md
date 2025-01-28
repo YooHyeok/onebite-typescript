@@ -1019,17 +1019,17 @@ const 상수 객체 property에 접근하는것과 같은 문법으로 값에 �
 
   const client1 = {
     name: '유혁스쿨',
-    tier: Tier.ADMIN // 0: 관리자
+    tier: Tier.ADMIN // 10: 관리자
   }
 
   const client2 = {
     name: '홍길동',
-    tier: Tier.USER // 1: 일반유저
+    tier: Tier.USER // 11: 일반유저
   }
 
   const client3 = {
     name: '아무개',
-    tier: Tier.GUEST // 2: 게스트
+    tier: Tier.GUEST // 12: 게스트
   }
 
   console.log(client1, client2, client3)
@@ -1058,12 +1058,12 @@ const 상수 객체 property에 접근하는것과 같은 문법으로 값에 �
 
   const soldier2 = {
     name: '홍길동',
-    level: Level.USER // 1: 일반유저
+    level: Level.USER // 10: 일반유저
   }
 
   const soldier3 = {
     name: '아무개',
-    level: Level.GUEST // 2: 게스트
+    level: Level.GUEST // 11: 게스트
   }
   
   console.log(soldier1, soldier2, soldier3)
@@ -1073,6 +1073,42 @@ const 상수 객체 property에 접근하는것과 같은 문법으로 값에 �
   ```text/plain
   { name: '유혁스쿨', level: 0 } { name: '홍길동', level: 10 } { name: '아무개', level: 11 }
   ```
+
+## Enum 중복문제
+아래와 같이 첫번째 멤버의 값을 11로 명시적으로 할당한 뒤 두번째 멤버의 값을 10으로 할당할 경우  
+3번째 값은 자동으로 최종 할당값 기준으로 증가값이 할당된다.  
+이 경우 첫번째 값과 3번째 값이 동일하게 11로 할당되는 중복 문제가 발생한다.  
+
+해결책으로는 모든 멤버 값을 명시적으로 지정한다.
+- src/chapter5.ts
+  ```ts
+  enum Class {
+    ADMIN = 11,
+    USER = 10,
+    GUEST
+  }
+  const student1 = {
+    name: '유혁스쿨',
+    level: Class.ADMIN // 11: 관리자
+  }
+
+  const student2 = {
+    name: '홍길동',
+    level: Class.USER // 10: 일반유저
+  }
+
+  const student3 = {
+    name: '아무개',
+    level: Class.GUEST // 11: 게스트
+  }
+  console.log(student1, student2, student3)
+  ```
+- tsx src/chapter5.ts
+  ```text/plain
+  { name: '유혁스쿨', level: 11 } { name: '홍길동', level: 10 } { name: '아무개', level: 11 }
+  ```
+
+
 ## 문자형 enum (문자열 값 할당)
 
 ### 각 국가별 언어를 열거하는 열거형 생성

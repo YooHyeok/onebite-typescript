@@ -91,17 +91,17 @@ enum Tier {
 
 const client1 = {
   name: '유혁스쿨',
-  tier: Tier.ADMIN // 0: 관리자
+  tier: Tier.ADMIN // 10: 관리자
 }
 
 const client2 = {
   name: '홍길동',
-  tier: Tier.USER // 1: 일반유저
+  tier: Tier.USER // 11: 일반유저
 }
 
 const client3 = {
   name: '아무개',
-  tier: Tier.GUEST // 2: 게스트
+  tier: Tier.GUEST // 12: 게스트
 }
 
 /* tsx src/chapter5.ts */
@@ -124,12 +124,12 @@ const soldier1 = {
 
 const soldier2 = {
   name: '홍길동',
-  level: Level.USER // 1: 일반유저
+  level: Level.USER // 10: 일반유저
 }
 
 const soldier3 = {
   name: '아무개',
-  level: Level.GUEST // 2: 게스트
+  level: Level.GUEST // 11: 게스트
 }
 /* tsx src/chapter5.ts */
 console.log(soldier1, soldier2, soldier3) // { name: '유혁스쿨', level: 0 } { name: '홍길동', level: 10 } { name: '아무개', level: 11 }
