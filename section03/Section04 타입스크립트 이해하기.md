@@ -1,3 +1,6 @@
+# [메인 마크다운.md](README.md)
+<br>
+
 # 타입스크립트 이해하기
 <details>
 <summary>펼치기/접기</summary>
