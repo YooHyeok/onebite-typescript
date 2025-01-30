@@ -187,11 +187,14 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 </details>
 <br>
 
-# [Section02 타입스크립트 개론.md](Section02%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EA%B0%9C%EB%A1%A0.md)
+# [Section02 타입스크립트 개론.md](section01%2FSection02%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EA%B0%9C%EB%A1%A0.md)
 <br>
 
-# [Section02 타입스크립트 컴파일러 옵션 설정.md](Section02%20%C5%B8%C0%D4%BD%BA%C5%A9%B8%B3%C6%AE%20%C4%C4%C6%C4%C0%CF%B7%AF%20%BF%C9%BC%C7%20%BC%B3%C1%A4.md)
+# [Section02 타입스크립트 컴파일러 옵션 설정.md](section01%2FSection02%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC%20%EC%98%B5%EC%85%98%20%EC%84%A4%EC%A0%95.md)
 <br>
 
-# [Section03 타입스크립트 기본.md](Section03%20%C5%B8%C0%D4%BD%BA%C5%A9%B8%B3%C6%AE%20%B1%E2%BA%BB.md)
+# [Section03 타입스크립트 기본.md](section02%2FSection03%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EA%B8%B0%EB%B3%B8.md)
+<br>
+
+# [Section04 타입스크립트 이해하기.md](section03%2FSection04%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0.md)
 
