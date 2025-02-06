@@ -150,7 +150,7 @@ tag라는 프로퍼티가 추가될 경우를 기준으로 3개 타입의 집합
 - Guest 타입에만 포함되는 객체: {tag:"GUEST, name, visitCount}
 
 이때 Admin ∩ Member에 포함되는 객체를 만들려고 하면 tag프로퍼티가 ADMIN이면서 동시에 MEMBER여야 한다.  
-그러나 string 리터럴 타입은 딱 한개의 값만 포함한다. (___.ts 참조)  
+그러나 string 리터럴 타입은 딱 한개의 값만 포함한다. (Section03/chapter1.ts 참조)  
 그렇기 때문에 ADMIN이라는 string리터럴 타입과 MEMBER라는 string리터럴 타입은없다. 고로 두 string리터럴 타입의 교집합은 공집합, never이다.  
 Admin타입과 Member타입 사이의 교집합, Member와 Quest간의 교집합 모두 존재할 수 없다.  
 따라서 tag라는 프로퍼티를 만들어 준 다음 해당 프로퍼티의 타입을 string 리터럴 타입으로 모두 다르게 정의해주면 객체들이 서로소 집합의 관계를 갖게 된다.  
