@@ -507,6 +507,120 @@ funcA의 매개변수 갯수가 더 많은데 funcB로 취급하려고 하는것
 </details>
 <br>
 
+## 함수 오버로딩
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+함수 오버로딩이란?
+함수를 매개변수의 갯수나 타입에 따라서 여러가지 버전으로 정의하는 방법이다.  
+```c
+/* 매개변수 없음 */
+void func() {
+  printf("매개변수 없음");
+}
+/* 매개변수 한개 */
+void func(int a) {
+  printf(a + 20);
+}
+/* 매개변수 두개 */
+void func(int a, int b) {
+  printf(i + j);
+}
+```
+위 예제 코드는 C언어로 짜여진 함수이다.  
+동일한 함수 이름인 func를 3회 선언하고있다.  
+매개변수가 없을 때, 1개일 때, 2개일 때 3가지 경우에 따라서 동일한 함수를 여러번 중복 정의해서 func라는 함수를 
+매개변수 없이 `func();`를 호출하면 첫번째 func함수를 호출하고 아래 라인에서 `func(1);`와 같이 매개변수를 하나만 넣어 호출하게 되면 두번째 func함수를 호출하고 마지막으로 `func(1, 2);`와 같이 호출하면 3번째 함수를 호출한다.  
+이러한 문법을 함수 오버로딩이라고 부른다.  
+자바스크립트에서는 함수 오버로딩이 지원되지 않고 오직 타입스크립트에서만 지원이된다.  
+
+
+### 함수 오버로딩 예제 정의
+- → 함수 func 정의
+- 모든 매개변수의 타입: number
+- Ver1. 매개변수가 1개: 매개변수에 20을 곱한값 출력
+- Ver2. 매개변수가 3개: 매개변수 총 합 출력
+
+
+### 오버로드 시그니처
+타입스크립트에서 함수 오버로딩을 구현하기 위해서는 가장 먼저 해야할 일이 있다.  
+어떤 버전이 있는지 알려줘야 한다.  
+아래와 같이 함수 구현부 없이 세미콜론으로 끝내는 문법을 사용하면 2가지 버전이 있다는것을 알려주는것과 같다.  
+이를 오버로드 시그니처라고 부른다.  
+함수를 오버로딩 하기 위해 각각 매개변수 별로 다른 버전을 명시해주기 위해 사용한다 라고 이해하면 된다.  
+- src/Chapter0.ts
+  ```ts
+  function funcA(a: number): void;
+  function funcA(a: number, b:number, c:number): void;
+  ```
+
+### 구현 시그니처
+오버로드 시그니처로 정의한 함수의 실제 구현부 정의하는것을 말한다.
+function func() {}와 같이 아무런 매개변수도 없고 반환도 없는 함수를 정의를 한 뒤 매개변수를 넣어 호출할 경우 오류가 발생할 것으로 예측할 수 있다.  
+실제로 매개변수가 없이 호출해보고 1개, 2개, 3개를 넣어 호출해보면 1개와 3개를 넣었을 때 빼고는 모두 오류가 발생한다.  
+- src/Chapter0.ts
+  ```ts
+  function funcA() {}
+  funcA(); // [Error] Expected 1-3 arguments, but got 0.ts(2554)
+  funcA(1);
+  funcA(1, 2); // [Error] No overload expects 2 arguments, but overloads do exist that expect either 1 or 3 arguments.ts(2575)
+  funcA(1, 2, 3);
+  ```
+실제 구현부에서는 매개변수가 하나도 정의되어있지 않기 때문에 첫번째 호출 말고는 다 비정상인것처럼 보인다.  
+그러나 결론적으로는 첫번째 호출에서 오류가 발생하고, 나머지 두번째와 네번째는 오류가 발생하지 않는다.  
+이는 오버로드 시그니처 때문이다.  
+어떤 함수가 오버로드 시그니처를 갖고 있으면, 함수를 호출할 때 인수들의 타입이 실제 구현부에 정의된 매개변수의 갯수나 타입에 따르지 않고, 오버로드 시그니처들 중 하나의 버전을 따라간다.  
+따라서 매개변수로 number타입 값 1개를 인수로 전달했을 때는 오버로드 시그니처의 첫번재 버전과 일치하기 때문에 허용이 된것이다.  
+number타입 값 3개를 전달한 호출문은 2번째 오버로드 시그니처 버전과 맞기 때문에 허용이 된것이다.  
+나머지는 오버로드 시그니처에 매개변수가 없는것, 2개만 있는것이 없기 때문에 허용이 되지 않는 것이다.  
+사실상 오버로드 시그니처들을 만들어 두면 실제 구현부의 매개변수 타입들은 호출할 때는 큰 영향을 미치지 않는다.  
+그렇기 때문에 버전을 여러개 만들어 버전에 따라 호출하도록 만들어 줄 수가 있다.  
+
+
+### 구현 오류 케이스
+function funcB(a: number, b:number, c:number) {} 과 같이 함수를 실제로 구현할 경우 첫번째 오버로드시그니처에서 오류가 발생한다.  
+오류 메시지를 살펴보면 이 오버로드 시그니처는 구현 시그니처와 호환되지 않는다 라는 메시지를 뱉는다.  
+실제 함수를 구현할 경우 실제 동작은 구현된 코드의 블록에서 발생하기 때문에, 매개변수 3개가 모두 있다고 타입을 정의해버리면 첫번째 오버로드 시그니처의 존재가 없어진다.  
+- src/Chapter0.ts
+  ```ts
+  function funcB(a: number): void; // [Error] This overload signature is not compatible with its implementation signature.ts(2394
+  function funcB(a: number, b:number, c:number): void;
+  function funcB(a: number, b:number, c:number) {}
+  ```
+구현 시그니처에서 매개변수 3개가 모두 필수 매개변수로 정의가 되어 있기 때문에 아래와 같이 실제로 함수 내부에서 모든 매개변수 a, b, c에 대해 모두 다 있다고 가정하고 코드를 작성 할것이다.  
+이 경우 첫번째 오버로드 시그니처는 의미가 없어지게 된다.  
+따라서 오버로드 시그니처들의 매개변수의 갯수에 차이가 있다면 최대한 방어적으로 선택적 프로퍼티로 매개변수로 정의해서, 모든 오버로드 시그니처들이 의미가 있도록 만들어 줘야 한다.  
+- src/Chapter0.ts
+  ```ts
+  function funcC(a: number): void;
+  function funcC(a: number, b:number, c:number): void;
+
+  function funcC(a: number, b?:number, c?:number) {
+    a.toFixed();
+    b.toFixed(); // 선택적 매개변수의 경우 타입가드 혹은 기본값 필요
+    c.toFixed(); // 선택적 매개변수의 경우 타입가드 혹은 기본값 필요
+  }
+  ```
+
+### 실제 구현
+- src/Chapter0.ts
+  ```ts
+  function funcD(a: number): void;
+  function funcD(a: number, b:number, c:number): void;
+  function funcD(a: number, b?:number, c?:number) {
+    if (typeof b === 'number' && typeof c === 'number') {
+      console.log(a + b + c)
+    } else {
+      console.log(a * 20);
+    }
+  }
+  ```
+
+
+</details>
+<br>
+
 ## 템플릿1
 <details>
 <summary>펼치기/접기</summary>
