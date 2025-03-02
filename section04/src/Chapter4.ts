@@ -91,8 +91,8 @@ function warningD(animal: Animal) {
     animal // [정상] (parameter) animal: Dog
   }
   if (isCatType(animal)) {
-    // 강아지
-    animal // [정상] (parameter) animal: Dog
+    // 고양이
+    animal // [정상] (parameter) animal: Cat
   }
 } 
 
