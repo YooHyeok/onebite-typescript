@@ -197,8 +197,10 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 <br>
 
 # [Section04 타입스크립트 이해하기.md](section03%2FSection04%20%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0.md)
+<br>
 
 # [Section05 함수와 타입.md](<section04/Section05 함수와 타입.md>)
+<br>
 
-
-
+# [Section06 인터페이스](<section05/Section06 인터페이스.md>)
+<br>
