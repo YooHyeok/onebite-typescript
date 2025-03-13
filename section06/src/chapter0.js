@@ -257,8 +257,10 @@ class StudentDeveloper extends Student {
     console.log(`${this.favoriteSkill}로 프로그래밍 함`)
   }
 }
-
-
+const studentDeveloper2 = new StudentDeveloper('유혁', 'B+', 31, 'JAVA');
+console.log(studentDeveloper2);
+studentDeveloper2.study();
+studentDeveloper2.programming();
 /* 
 ### 번외1) 생성자 함수 활용1
 */
@@ -284,7 +286,7 @@ console.log(studentC.study === studentD.study) // false: 각 객체마다 새로
 function Student(name, grade, age) {
   this.name = name;
   this.grade = grade;
-  this.age = grade;
+  this.age = age;
 }
 /* 프로토타입으로 등록 */
 this.prototype.study = function() {
@@ -300,6 +302,45 @@ console.log(studentE.study === studentF.study) // true: 각 객체가 동일한 
 /* 
 클래스의 메소드는 기본적으로 prototype 메소드로 정의된다.
  */
+
+
+/* 
+생성자 함수 상속
+*/
+function Student(name, grade, age) {
+  this.name = name;
+  this.grade = grade;
+  this.age = age;
+}
+/* 프로토타입으로 등록 */
+this.prototype.study = function() {
+  console.log("열심히 공부함.")
+}
+this.prototype.introduce = function() {
+  console.log("안녕하세요!")
+}
+
+function StudentDeveloper(name, grade, age, favoriteSkill) {
+  Student.call(this, name, grade, age); // class의 super(name, grage, age)와 같음.
+  this.favoriteSkill = favoriteSkill;
+}
+
+/* prototype 상속 - 자식 프로토타입 생성자가 부모를 가리키게 됨 */
+StudentDeveloper.prototype = Object.create(Student.prototype)
+
+/* 생성자만 다시 자신것으로 변경 - 메소드만 상속, 생성자는 고유하게 */
+StudentDeveloper.prototype.constructor = StudentDeveloper;
+
+this.prototype.programming = function () {
+  console.log(`${this.favoriteSkill}로 프로그래밍 함`)
+}
+
+const studentDeveloper3 = new StudentDeveloper('유혁', 'B+', 31, 'JAVA');
+console.log(studentDeveloper3);
+studentDeveloper3.study();
+studentDeveloper3.programming();
+
+
 
 /* 
 ### 번외1) 클래스 필드 private 접근제한
