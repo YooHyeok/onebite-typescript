@@ -325,7 +325,62 @@ StudentDeveloper클래스 생성자 내부에서 super 메소드를 호출함으
   </details>
   <br>
 
-  ### 번외2) 클래스 필드 private 접근 제한
+  ### 번외2) 생성자 함수 상속
+  <details>
+  <summary>펼치기/접기</summary>
+  <br>
+
+  아래와 같이 구현한다.  
+  - src/index.js
+    ```js 
+    /* 
+    생성자 함수 상속
+    */
+    function Student(name, grade, age) {
+      this.name = name;
+      this.grade = grade;
+      this.age = age;
+    }
+    /* 프로토타입으로 등록 */
+    this.prototype.study = function() {
+      console.log("열심히 공부함.")
+    }
+    this.prototype.introduce = function() {
+      console.log("안녕하세요!")
+    }
+
+    function StudentDeveloper(name, grade, age, favoriteSkill) {
+      Student.call(this, name, grade, age); // class의 super(name, grage, age)와 같음.
+      this.favoriteSkill = favoriteSkill;
+    }
+
+    /* prototype 상속 - 자식 프로토타입 생성자가 부모를 가리키게 되는 이슈 발생 */
+    StudentDeveloper.prototype = Object.create(Student.prototype)
+
+    /* 생성자만 다시 자신것으로 변경 - 메소드만 상속, 생성자는 고유하게 */
+    StudentDeveloper.prototype.constructor = StudentDeveloper;
+
+    this.prototype.programming = function () {
+      console.log(`${this.favoriteSkill}로 프로그래밍 함`)
+    }
+
+    const studentDeveloper = new StudentDeveloper('유혁', 'B+', 31, 'JAVA');
+    console.log(studentDeveloper);
+    studentDeveloper.study(); // 부모 메소드 호출
+    studentDeveloper.programming(); // 자식 메소드 호출
+    ```
+
+    여기서 핵심은 3가지이다.
+    1. 자식 객체 생성자 함수 블록 내에서 `Student.call(this, ...arg);`을 호출하여 첫번째 매개변수에 this를, 나머지 매개변수에 부모 클래스의 필드를 초기화 하는 인자를 넣어준다.  
+    이 행위는 Class에서 상속받은 뒤 생성자를 통해 초기화할 때, 부모 클래스의 생성자인 super를 호출하여 부모클래스 필드를 초기화하는것과 동일한 행위이다.  
+    2. `자식객체생성자함수명.prototype = Object.create(부모객체생성자함수명.prototype);` 문법의 경우 부모 프로토타입을 자식 프로토타입으로 상속받는것을 말한다.  
+    그러나 이 경우 자식 프로토타입 생성자가 부모를 가리키게 되는 이슈 발생하게 된다. (코드만 봐도 그렇게 될거처럼 보인다.)  
+    3. 위 문제를 해결하기 위해 `자식객체생성자함수명.prototype.constructor = 부모객체생성자함수명;` 코드를 통해 생성자만 다시 자신의 것으로 변경해줘야 한다.  
+    생성자를 자기자신으로 돌리되, 함수만 이전하는것이다.
+  </details>  
+  <br>
+
+  ### 번외3) 클래스 필드 private 접근 제한
   <details>
   <summary>펼치기/접기</summary>
   <br>
