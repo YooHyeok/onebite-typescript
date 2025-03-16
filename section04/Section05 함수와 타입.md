@@ -1,4 +1,4 @@
-# [메인 마크다운.md](README.md)
+# [메인 마크다운.md](../README.md)
 <br>
 
 
