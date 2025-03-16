@@ -5,7 +5,8 @@
     "outDir": "dist",
     "strict": true,
     "moduleDetection": "force",
-    "skipLibCheck": true /* undici-types 에러 */
+    "skipLibCheck": true /* undici-types 에러 */,
+    "noImplicitAny": true // false로 옵션을 끌 경우 any 타입을 허용한다.
   },
   "include": ["src"]
 }
