@@ -204,3 +204,6 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 
 # [Section06 인터페이스](<section05/Section06 인터페이스.md>)
 <br>
+
+# [Section07 클래스](<section6/Section07 클래스.md>)
+<br>
