@@ -207,3 +207,6 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 
 # [Section07 클래스](<section6/Section07 클래스.md>)
 <br>
+
+# [Section08 제네릭](<section07/Section08 제네릭.md>)
+<br>
