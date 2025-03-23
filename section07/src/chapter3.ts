@@ -78,3 +78,15 @@ let stringMap: IMap<string> = {
 let booleanMap: IMap<boolean> = {
   key: true
 }
+
+/* 
+### 제네릭 타입 별칭
+제네릭 타입 별칭을 만드는 법은 제네릭 인터페이스를 만드는것과 크게 다른점이 없다.  
+앞서 제네릭 인터페이스로 만들었던 IMap 타입을 타입 별칭으로 똑같이 만들어 본다.  
+*/
+type IMap2<V> = {
+  [key: string]: V
+}
+let stringMap2: IMap2<string> = {
+  key: "hello"
+}
