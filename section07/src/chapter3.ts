@@ -50,3 +50,31 @@ let keyPairC: IKeyPair<boolean, string[]> = {
 /* 
 이렇게 제네릭 인터페이스는 하나의 인터페이스로 다양한 타입의 객체를 표현할 수 있다.
 */
+
+/* 
+### 제네릭 인터페이스와 Index Signature 문법 활용
+제네릭 인터페이스는 인덱스 시그니처 문법과 함께 사용할 경우 굉장히 유연한 객체 타입을 만들 수 있다.  
+인덱스 시그니처의 문법은 아래와 같은 인터페이스가 있을 때 key의 타입은 string, value의 타입은 number와 같이 프로퍼티의 key와 value의 타입에 관련된 규칙만 만족하면 어떤 객체든 허용하는 아주 유연한 객체 타입을 만드는 문법이다.  
+*/
+interface INumberMap {
+  [key: string]: number;
+}
+let numberMap: INumberMap = {
+  key: -123,
+}
+/* 
+이러한 인덱스 시그니처 문법에 제네릭까지 함께 사용하면 지금보다 더 유연하게 타입을 정의할 수 있다.  
+먼저 제네릭 타입 변수 V를 갖는 인터페이스 IMap를 정의한 뒤 인덱스 시그니처 문법을 활용하여 인터페이스 key 프로퍼티에는 string타입을 지정하고, value 프로퍼티에는 타입 변수 V를 정의한다.  
+다음으로 IMap 타입을 지정한 새로운 변수 stringMap을 정의하고, IMap 타입의 타입 변수에 string을 할당한뒤, 변수에 할당하려는 객체의 key프로퍼티의 value에 "value"와 같이 문자열 값을 할당한다.  
+string 타입이 아닌 boolean도 가능하다.  
+이렇게 제네릭 인터페이스에 인덱스 시그니처 문법을 활용할 경우 하나의 타입으로 굉장히 다양한 객체를 유연하게 정의하고, 표현할 수 있다.  
+*/
+interface IMap<V> {
+  [key: string]: V
+}
+let stringMap: IMap<string> = {
+  key: "value"
+}
+let booleanMap: IMap<boolean> = {
+  key: true
+}
