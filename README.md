@@ -211,5 +211,5 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 # [Section08 제네릭](<section07/Section08 제네릭.md>)
 <br>
 
-# [Section09 제네릭](<section08/Section09 타입 조작하기.md>)
+# [Section09 타입 조작하기](<section08/Section09 타입 조작하기.md>)
 <br>

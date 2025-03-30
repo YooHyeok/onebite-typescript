@@ -80,7 +80,7 @@ function printAuthorInfoB(author: {id: number; name: string; age: number}) {
   console.log(`${author.name}-${author.id}`)
 }
 /* 
-지금은 함수가 하나밖에 없어 그냥 추가해주면 되긴 했지만, 만약 author 객체 매개변수를 받는 함수가 여러개가 된다면 어떨까?
+지금은 함수가 하나밖에 없어 그냥 추가해주면 되긴 했지만, 만약 author 객체 매개변수를 받는 함수가 여러개가 된다면 어떨까?  
 PostB 인터페이스의 author 프로퍼티 객체타입 내부에 location 프로퍼티가 또 새롭게 추가된다면, 모든 함수의 매개변수 타입에 location 프로퍼티를 추가하고 타입을 지정해줘야한다.  
 */
 
@@ -158,8 +158,8 @@ function printAuthorInfoI(author: PostD[inedxKey]) {
   console.log(`${author.name}-${author.id}`)
 }
 /* 
-2. 존재하지 않는 프로퍼티 이름 사용불가
-PostD타입에 존재하지 않는 프로퍼티를 인덱스 위치에 적용할 경우 프로퍼티가 없다는 오류를 출력한다.
+2. 존재하지 않는 프로퍼티 이름 사용불가  
+PostD타입에 존재하지 않는 프로퍼티를 인덱스 위치에 적용할 경우 프로퍼티가 없다는 오류를 출력한다.  
 */
 function printAuthorInfoJ(author: PostD["what"]) { // [Error] Property 'what' does not exist on type 'PostD'.ts(2339)
   console.log(`${author.name}-${author.id}`)
