@@ -139,3 +139,124 @@ interface PostD {
 function printAuthorInfoG(author: PostD['author']) { // author: { id: string; name: string; age: number; location: string; }
   console.log(`${author.name}-${author.id}`)
 }
+/* 
+### 인덱스드 액세스 타입 사용 주의점
+1. 인덱스에 들어가는 문자열은 값이 아닌 타입이다.  
+입문자들이 굉장히 많이 햇갈리는 부분으로, 예를들어 author라는 문자열을 key라는 변수에 할당하고, 기존 인덱스 위치에 할당할 경우 오류가 발생한다.  
+인덱스에 들어올수 있는 것은 오로지 타입만 들어올 수 있는데, key는 타입이 아닌 변수, 곧 값이기 때문에 오류가 발생한것이다.  
+*/
+const key = "author"
+function printAuthorInfoH(author: PostD[key]) { // [Error] Type 'key' cannot be used as an index type.ts(2538)
+  console.log(`${author.name}-${author.id}`)
+}
+/* 
+인덱스드 액세스 타입에서 인덱스 위치에는 오로지 타입만 올 수 있다.  
+따라서 변수 key가 아닌 string 리터럴 타입을 갖는 type을 선언하여 적용할 경우 오류가 발생하지 않게 된다.  
+*/
+type inedxKey = "author"
+function printAuthorInfoI(author: PostD[inedxKey]) {
+  console.log(`${author.name}-${author.id}`)
+}
+/* 
+2. 존재하지 않는 프로퍼티 이름 사용불가
+PostD타입에 존재하지 않는 프로퍼티를 인덱스 위치에 적용할 경우 프로퍼티가 없다는 오류를 출력한다.
+*/
+function printAuthorInfoJ(author: PostD["what"]) { // [Error] Property 'what' does not exist on type 'PostD'.ts(2339)
+  console.log(`${author.name}-${author.id}`)
+}
+/* 
+3. 중첩 프로퍼티 탐색
+PostD 타입의 author 프로퍼티 하위의 name, id 프로퍼티의 타입만 가져오고 싶을경우 author 프로퍼티의 타입을 인덱스드 액세스 문법으로 가져온 뒤,  
+동일한 방식으로 대괄호를 통해 name과 id 프로퍼티를 가져올 수 있다.  
+*/
+function printAuthorInfoK(name: PostD["author"]["name"], id: PostD["author"]["id"]) {
+  console.log(`${name}-${id}`)
+}
+
+/* 
+### 인덱스드 액세스 타입 예제 2 - 배열 타입
+인터페이스는 객체 타입 정의에만 특화되어 있기 때문에 배열 타입을 정의하기엔 불편하다.  
+따라서 타입 별칭으로 선언하도록 한다.  
+이전 Post 인터페이스를 타입 별칭으로 변경하고, 마지막에 대괄호를 추가해준다.  
+포스트 타입의 요소 여러 개를 저장하는 포스트 리스트 타입으로 변경되었다.  
+인덱스드 액세스 타입을 이용하여 배열 타입으로 부터 배열 요소의 타입인 Post 객체 타입을 추출하여 적용해본다.
+*/
+type PostList = {
+  title: string;
+  content: string;
+  author: {
+    id: number;
+    name: string;
+    age: number;
+  };
+} []
+/* 
+변수에 배열 타입을 적용하고, 인덱스드 액세스 타입을 활용하여 요소의 타입 하나만 추출한다.  
+대괄호안에 number를 적용할 경우 배열 타입으로부터 요소의 타입을 잘 추출해온 것을 확인할 수 있다.  
+배열의 모든 인덱스는 기본적으로 number타입 이므로 배열의 인덱스 타입인 number 타입을 적용한것이다.  
+이때, 대괄호에 number 타입이 아닌 실제 인덱스로 배열에 접근하는 것처럼 number 리터럴 타입인 0, 1 등의 숫자를 넣어도 오류없이 정상적으로 작동한다.  
+*/
+const postB: PostList[number] = {
+  title: "게시글 제목",
+  content: "게시글 본문",
+  author: {
+    id: 1,
+    name: "유혁스쿨",
+    age: 27
+  }
+}
+const postC: PostList[3] = {
+  title: "게시글 제목",
+  content: "게시글 본문",
+  author: {
+    id: 1,
+    name: "유혁스쿨",
+    age: 27
+  }
+}
+/* 
+마찬가지로 주의할 점은 3은 값이 아닌 타입이다.  
+number 리터럴 타입이기 때문에 예를들어 `const num = 3;`을 선언한 뒤 아래와 같이 num을 인덱스에 적용할 경우 오류가 발생하게 된다.  
+따라서, 이전 예제와 같이 인덱스에 들어가는 값은 무조건 타입이어야만 한다.
+*/
+const num = 3;
+const postD: PostList[num] = { // 'num' refers to a value, but is being used as a type here. Did you mean 'typeof num'?ts(2749)
+  title: "게시글 제목",
+  content: "게시글 본문",
+  author: {
+    id: 1,
+    name: "유혁스쿨",
+    age: 27
+  }
+}
+
+/* 
+함수의 매개변수 타입을 바꿔보도록 한다.  
+객체타입인 Post가 아닌 배열 타입에서 객체를 뽑아야하기 때문에 number 혹은 number 리터럴 타입으로 접근한 뒤, author 라는 string 리터럴 타입을 통해 author 프로퍼티를 추출한다.
+*/
+function printAuthorInfoL(author: PostList[3]["author"]) {
+  console.log(`${author.name}-${author.id}`)
+}
+
+/* 
+### 인덱스드 액세스 타입 예제3 - 튜플
+number, string, boolean 타입을 요소로 갖는 튜플 타입을 선언한 뒤, 각 튜플 타입을 인덱스드 액세스 타입을 통해 접근하여 개별 타입으로 추출할 수 있다.  
+*/
+type Tup = [number, string, boolean]
+type Tup0 = Tup[0] // number type
+type Tup1 = Tup[1] // string type
+type Tup2 = Tup[2] // boolean type
+/* 
+또한, 튜플 타입은 길이가 고정된 배열이기 때문에 존재하지 않는 인덱스 타입을 추출하려고하면 오류가 발생한다.
+*/
+type Tup3 = Tup[3] // Error]Tuple type 'Tup' of length '3' has no element at index '3'.ts(2493)
+/* 
+배열타입을 추출할 때처럼 인덱스에 number를 적어도 문제없다.  
+이 경우 튜플 타입안에 있는 모든 타입의 최적의 공통 타입을 뽑아온다.  
+마우스 커서를 올려보면 3개 타입의 최적의 공통 타입인 3개 타입의 유니온 타입으로 추출하게 된다.
+*/
+type Tup4 = Tup[number]
+
+/* 
+인덱스드 액세스 타입은, 복잡하고 큰 타입으로부터 잘게잘게 필요한 만큼만 타입을 추출할 수 있기 때문에 실무에서도 굉장히 요긴하게 사용할 수 있다.  
+*/
