@@ -64,7 +64,7 @@ function updateUserEx2(user: IPartialUser) {
   // 수정 기능
 }
 updateUserEx2({
-  age: 32 // [Error] Type '{ age: number; }' is missing the following properties from type 'User': id, namets(2345)
+  age: 32
 })
 /* 
 매개변수 user에는 모든 프로퍼티가 있어도 되고 없어도 되는 IPartialUser 타입이 되었으므로, 수정하길 원하는 프로퍼티만 선택적으로 구성한 형태의 객체 전달이 가능해졌다.  
@@ -116,4 +116,6 @@ type PartialUserA = {
 ```
 
 이렇게 Mapped Type을 이용하면 특정 객체 타입을 원하는 대로 변환할 수 있기 때문에, 하나의 객체 타입으로 굉장히 다양한 상황에 대처할 수 있게 된다.  
+
+8분 13초
 */
