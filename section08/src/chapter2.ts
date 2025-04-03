@@ -117,5 +117,73 @@ type PartialUserA = {
 
 이렇게 Mapped Type을 이용하면 특정 객체 타입을 원하는 대로 변환할 수 있기 때문에, 하나의 객체 타입으로 굉장히 다양한 상황에 대처할 수 있게 된다.  
 
-8분 13초
+### 예제2)
+모든 프로퍼티의 value 타입이 number string number으로 되어있는 IUser타입을 모두 Boolean타입으로 변형해본다.
+BooleanUser라는 이름의 타입 별칭을 정의한 뒤, 블록 내에서 Mapped Type 문법을 적용한다.  
+좌측에는 이전에 정의했던것과 동일하게 in연산자를 활용하여 모든 프로퍼티 키 이름을 string 리터럴 유니온 타입으로 묶어준 뒤,
+콜론을 기준으로 우측항에 boolean타입을 지정해준다.  
 */
+type BooleanUser = {
+  [key in "id"|"name"|"age"]: boolean
+}
+/* 
+BooleanUser 타입 이름에 마우스 커서를 올려보면
+```ts
+type BooleanUser = {
+    age: boolean;
+    id: boolean;
+    name: boolean;
+}
+```
+형태로 모든 프로퍼티가 boolean 타입으로 정의된 것을 확인할 수 있다.  
+
+#### Mapped Type에 keyof 연산자 활용
+만약 IUser타입의 프로퍼티의 개수가 많아져, 대괄호 내 string 리터럴 유니온타입으로 일일이 나열하기 힘든 경우 keyof 연산자를 활용할 수 있다.
+이전 챕터에서 배운 keyof 연산자란 `keyof {타입}` 형태로 작성되며, 타입내 구성된 모든 프로퍼티 항목들을 string 리터럴 유니온 타입으로 반환해주는 연산자였다.
+*/
+type BooleanUser2 = {
+  [key in keyof IUser]: boolean
+}
+/* 
+위와같이 keyof 연산자로 IUser 객체 타입을 지정해주면
+```ts
+type BooleanUser2 = {
+    id: boolean;
+    name: boolean;
+    age: boolean;
+}
+```
+형태로 IUser인터페이스의 모든 프로퍼티가 자동으로 BooleanUser 타입에 적용되는것을 확인할 수 있다.  
+
+참고로 대괄호 내 in연산자 좌측항에 정의한 key 키워드의 이름은 key뿐만 아니라 다른 이름으로도 임의로 적용할 수 있다.
+```ts
+[prop in keyof IUser]: Iuser[prop]
+```
+
+### 예제3)
+이전에 정의한 User 조회 기능을 가진 fetchUser() 함수에서 반환하는 IUser 타입의 모든 프로퍼티가 read-only 즉, 읽기전용인 객체를 반환하도록 타입을 만들어본다.  
+*/
+type ReadonlyUser = {
+  readonly [key in keyof IUser]: IUser[key]
+}
+/* 
+위와같이 IUser 인터페이스의 모든 key에 대한 value타입을 Mapped type 문법을 적용하여 수집한뒤, 해당 문법 좌측 맨 앞에 readonly 키워드를 적용한다.  
+```ts
+type ReadonlyUser = {
+    readonly id: number;
+    readonly name: string;
+    readonly age: number;
+}
+```
+형태로 모든 프로퍼티에 읽기전용 속성이 부여된 것을 확인할 수 있다.  
+실제로 fetchUser() 함수에 Mapped Type 문법이 적용된 타입을 반환타입으로 지정한 뒤, 해당 함수를 호출하고 반환받은 객체를 변수에 할당한 후 프로퍼티에 접근하여 값을 변경할 경우 수정할 수 없게 된다.  
+*/
+function fetchUserB(): ReadonlyUser {
+  return {
+    id: 1,
+    name: '유혁스쿨',
+    age: 34
+  }
+}
+const user = fetchUserB();
+user.id = 2; // [Error] Cannot assign to 'id' because it is a read-only property.ts(2540)
