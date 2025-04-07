@@ -213,3 +213,6 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 
 # [Section09 타입 조작하기](<section08/Section09 타입 조작하기.md>)
 <br>
+
+# [Section10 조건부 타입](<section09/Section10 조건부 타입.md>)
+<br>
