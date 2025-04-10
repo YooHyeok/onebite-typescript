@@ -293,6 +293,65 @@ number extends string ? never : number;는 거짓이 되기 때문에 변수 e�
   ```
 이 경우 number extends number ? never : number;는 참이 되기 때문에 변수 f는 never 타입이 된다.  
 
+#### 실제 응용1
+조건부 타입을 이용해서 유니온 타입으로부터 특정 타입만 제거하는 타입을 만들어 본다.  
+- src/chapter.ts
+  ```ts
+  type A = Exclude<number | string | boolean, string>; // type A = number | boolean
+  ```
+먼저 T에 유니온 타입을 타입 변수에 할당했기 때문에 분산적 조건부 타입이 되었다.  
+Exclude<number, string>  
+Exclude<string, string>  
+Exclude<boolean, string>  
+위와 같이 유니온 타입의 각 타입으로 3번 분리가 되었다.  
+이렇게 분리 된 타입의 결과들은 최종적으로 유니온 타입으로 묶여야 될 것이다.  
+이제 분리된 각 유니온 타입들로 부터 조건부 타입 연산의 결과를 도출해 본다.  
+Exclude<number, string>의 경우 `number extends string ? never : number`가 거짓이므로 number 타입이 된다.  
+Exclude<string, string>의 경우 `string extends string ? never : string`가 참이므로 never 타입이 된다.  
+Exclude<boolean, string>의 경우 `boolean extends string ? never : boolean`가 거짓이므로 boolean 타입이 된다.  
+최종 결과는 number, never, number 타입이며 이를 유니온 타입으로 묶게 되면 number | never | boolean 유니온 타입이 된다.   
+
+이때 union 타입에 never 타입이 포함되어 있으면 never는 결국 사라진다.  
+집합으로 생각해보면 유니온 타입이라는 것은 타입들 간의 합집합 타입을 만드는 것이다.  
+never타입이란 공집합 타입이기 때문에 공집합과 다른 어떤 집합을 합집합 한다는 건 원래 원본 집합인 것이다.  
+예를 들어 숫자값들을 포함하는 number라는 집합과, 아무런 요소들도 포함하지 않는 never라는 공집합을 합집합하면 결국 number라는 집합이 된다.  
+그렇기 때문에 결과에 never타입이 포함되어 있으면 never타입은 사라지게 되며, 최종 결과는 number | boolean 타입이 된다.  
+
+타입 A에 마우스 커서를 올려보면 `type A = number | boolean` 타입이 되는것을 볼 수 있다.  
+Exclude라는 조건부 타입을 만들면, T와 U가 같을 때 never를 반환하게 해서 아에 type을 없애버리고, T와 U가 다를 때 T를 그대로 반환해서 해당 타입을 그대로 적용한다.  
+이렇게 분산적인 조건부 타입을 이용해서 특정 유니온 타입으로부터 특정 타입만 제거하는 유니온 타입을 얻어내는 것도 가능하다.  
+
+#### 실제 응용 2
+Exclude의 반대 격이 되는 Extract 타입을 만들어 본다.  
+제네릭 타입 변수 T와 U를 구성한 뒤, U에 해당하는 타입만 제거하도록 구현해본다.  
+예를들어 number | string | boolean 유니온 타입 중 string인 타입만 뽑아내도록 한다.
+- src/chapter.ts
+  ```ts
+  type Extract<T, U> = T extends U ? T : never;
+  type B = Extract<number | string | boolean, string>;
+  ```
+위와같이 분산적 조건부 타입 식을 적용할 경우 타입 B는 U의 타입인 string 타입으로 추론된다.  
+과정을 정리해보면 다음과 같다.  
+Extract<number, string>  
+Extract<string, string>  
+Extract<boolean, string>  
+위와 같이 유니온 타입의 각 타입으로 3번 분리가 되었다.  
+이렇게 분리 된 타입의 결과들은 최종적으로 유니온 타입으로 묶여야 될 것이다.  
+이제 분리된 각 유니온 타입들로 부터 조건부 타입 연산의 결과를 도출해 본다.  
+Extract<number, string>의 경우 `number extends string ? string : never`가 거짓이므로 never 타입이 된다.  
+Extract<string, string>의 경우 `string extends string ? string : never`가 참이므로 string 타입이 된다.  
+Extract<boolean, string>의 경우 `boolean extends string ? string : never`가 거짓이므로 never 타입이 된다.  
+최종 결과는 never, string, never 타입이며 이를 유니온 타입으로 묶게 되면 string 타입이 된다.   
+
+### 조건부 타입의 분산 방지
+조건부 타입이 분산적으로 작동되지 않게 하고 싶다면 extends의 양 옆에 대괄호를 씌워주면 된다.
+- src/chapter.ts
+  ```ts
+  type Example<T, U> = [T] extends [U] ? T : never;
+  type C = Example<number | string | boolean, string>;
+  ```
+위의 결과는 never타입이 된다.  
+number | string | boolean의 합집합 유니온 타입은 extends string이 거짓이 되기 때문이다.  
 </details>
 <br>
 
