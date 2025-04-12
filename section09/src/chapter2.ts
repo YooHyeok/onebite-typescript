@@ -10,7 +10,7 @@ type Func = () => string
 이때 `Func타입의 반환값에 해당하는 타입만 가져오기 위해서 어떻게 해야할까?`
 string 타입만 추출하려고 한다.
 
-제네릭을 활용한 조건부 타입 문법을 적용해본다.
+제네릭을 활용한 조건부 타입 문법을 적용해본다.  
 타입변수 T extends 매개변수는 없고 반환값 타입이 string인 함수를 확장한다면 string타입을, 확장하지 않는다면 never타입을 반환하도록 조건부 타입 식을 작성한다.  
 */
 type ReturnType<T> = T extends () => string ? string : never;
@@ -92,4 +92,46 @@ ReturnType의 제네릭 타입 변수 T에는 number가 들어가게 된다.
 
 infer는 추론하다는 의미의 inference의 약자이다.  
 infer R 이라고 하면 R을 추론해라 라는 의미로 사용된다고 이해하면 된다.  
+*/
+/*
+### 예제3)
+제네릭 타입 변수 T를 갖는 PromiseUnpack이라는 타입을 선언한 후 any타입을 임시로 할당한다.  
+다음으로 해당 타입의 제너릭 타입 변수에 제네릭 타입변수 number를 갖는 Promise 타입을 지정한 뒤 PromiseA라는 타입 변수에 할당한다.  
+해당 코드는 PromiseA는 number 타입이 되기를 기대하는 코드이다.
+PromiseUnpack 타입의 역할은 타입변수 T에 제공한 Promise 타입에서 Promise의 결과값 타입 즉 number타입만 추출하여 할당하는 기능을 구현한다.  
+*/
+type PromiseUnpack<T> = any;
+type PromiseA = PromiseUnpack<Promise<number>>;
+/* 
+예를들어 아래와 같이 Promise<string> 타입을 PromiseUnpack 타입의 제네릭 타입 변수에 지정한다면, PromiseB타입은 string타입이 되기를 기대하는 코드가 된다.  
+*/
+type PromiseB = PromiseUnpack<Promise<string>>;
+/* 
+이러한 요구사항을 만족하기 위해서는 PromiseUnpack타입을 어떻게 정의해야 할까?  
+첫번째 조건으로는 PromiseUnpack타입의 제네릭 타입 변수 T는 Promise 타입이어야 한다.  
+두번째 조건은 Promise의 결과값 타입을 반환해야한다.  
+즉, PromiseUnpack 타입의 제네릭 타입변수 T에 Promise타입이 들어온다면 Promise 타입의 결과값 타입을 반환하는 타입으로 만들어야 한다.  
+
+첫번째 조건을 만족하도록 구현해본다.  
+PromiseUnpackA 타입을 선언한 뒤, T extends Promise<any> ? any : never와 같이 조건부 타입을 활용하되, 우선 Promise객체의 제네릭 타입 변수에는 임시로 any를 지정해준 뒤,  
+T가 Promise<any>의 서브타입이라면 any타입을 서브타입이 아니라면 never타입으로 추론되도록 조건부 타입을 작성한다.  
+*/
+type PromiseUnpackA<T> = T extends Promise<any> ? any : never;
+type PromiseAA = PromiseUnpackA<Promise<number>>; // type PromiseAA = any
+type PromiseBB = PromiseUnpackA<Promise<string>>; // type PromiseAA = any
+/* 
+실제로 타입변수를 선언하여 추론하도록 적용해본 뒤 마우스 커서를 올려보면 아직까지는 any타입을 반환한다.  
+
+두번째 조건을 만족하도록 하기 위해서 Promise의 제네릭 타입 변수 any 대신 infer R을 지정하고 조건식이 참일 경우 R을 반환하도록 조건부 타입을 수정한다.
+*/
+type PromiseUnpackB<T> = T extends Promise<infer R> ? R : never;
+type PromiseAAA = PromiseUnpackB<Promise<number>>; // type PromiseAAA = number
+type PromiseBBB = PromiseUnpackB<Promise<string>>; // type PromiseBBB = string
+/* 
+실제로 타입변수를 선언하여 추론하도록 적용해본 뒤 마우스 커서를 올려보면 number타입과 string타입을 각각 반환해 주는것을 확인할 수 있다.
+PromiseUnpackB 타입의 제네릭 타입 변수 T는 Promise<number> 이고, Promise<number> extends Promise<infer R> 라는 조건부 타입을 해석해보면  
+infer 키워드에 의해 Promise<number>타입이 서브타입이 되는 R 타입을 추론하라는 의미가 된다.  
+Promise<number> 타입이 서브타입이 되기 위해서는 Promise<infer R> 에서 R 타입은 number가 되면 된다.  
+따라서 결과 타입은 R이 되고, R은 number이기 때문에 결과 타입도 number로 추론된다.  
+Promise<string> 타입도 위의 논리 과정과 동일하게 적용되어 string타입으로 추론된다.  
 */
