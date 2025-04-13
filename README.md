@@ -216,3 +216,6 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 
 # [Section10 조건부 타입](<section09/Section10 조건부 타입.md>)
 <br>
+
+# [Section11 유틸리티 타입](<section10/Section11 유틸리티 타입.md>)
+<br>
