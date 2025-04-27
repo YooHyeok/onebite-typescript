@@ -4,7 +4,8 @@
     "module": "CommonJS",
     "strict": true,
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }
