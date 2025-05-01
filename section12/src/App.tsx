@@ -12,6 +12,23 @@ function App() {
   const onChange_Input = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
   }
+  const idRef = useRef<number>(0) // todo Object가 todos 배열에 추가될 때 마다 증가 시킬 ref 변수
+  const onClick_Add = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setTodos([
+      ...todos,
+      {
+        id: idRef.current++, // 값 증가
+        content: text
+      }
+    ])
+    setText("") // 입력란 초기화
+  }
+  /**
+   * todos state 변수 변경 감지.
+   */
+  useEffect(() => {
+    console.log(todos)
+  }, [todos])
 
   return (
     <div className="App">
@@ -21,7 +38,7 @@ function App() {
         value={text}
         onChange={onChange_Input}
       />
-      <button>추가</button>
+      <button onClick={onClick_Add}>추가</button>
     </div>
   );
 }
