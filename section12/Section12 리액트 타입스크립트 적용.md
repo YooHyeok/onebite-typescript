@@ -246,6 +246,96 @@ state 변수 string에 마우스 커서를 올려보면 `const string: string | 
 </details>
 <br>
 
+> ## React Event 표준 타입
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+### Change Event 타입 예제
+
+input 입력 태그에 값을 입력할 경우 text타입의 state변수 값을 입력한 값으로 변경하려는 기능을 구현해본다고 가정한다.  
+react에서는 input 태그에 onchange 이벤트 속성에 함수를 바인딩할 수 있다.  
+- [src/Event.tsx](src/Event.tsx)
+  ```tsx
+  import { useState } from "react"
+
+  function Event() {
+    const [text, setText] = useState<string>();
+    }
+    return (
+      <div>
+        <h1>Todo</h1>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => {setText(e.target.value)}}
+        />
+      </div>
+    );
+  }
+  export default Event;
+  ```
+
+이벤트 속성에 바인딩 된 함수에 타입스크립트를 적용한다면 어떤 문법으로 적용해야 할까?  
+먼저 매개변수로 전달하는 event 객체의 타입을 정의 해야한다.  
+사용하는 값이 e.target.value이기 때문에 아래 코드와 같이 string타입의 value를 갖는 target 프로퍼티에 매핑되는 객체 타입을 지정할 수 있다.  
+- [src/Event.tsx](src/Event.tsx)
+  ```tsx
+  import { useState } from "react"
+
+  function Event() {
+    const [text, setText] = useState<string>();
+    const onChangeInput = (e: {target: {value: string}}) => {
+      setText(e.target.value)
+    }
+    return (
+      <div>
+        <h1>Todo</h1>
+        <input
+          type="text"
+          onChange={onChangeInput}
+        />
+      </div>
+    );
+  }
+  export default Event;
+  ```
+그러나 해당 타입은 완전히 틀렸다.  
+결론적으로 일반적인 event 객체는 target 말고도 많은 프로퍼티를 갖고 있는 복합 객체이다.  
+따라서, 위와같이 선언할 경우 event 객체 전체가 아닌 event.target.value만 있다고 가정해버리는 것이다.  
+즉, 실제 있는 다른 프로퍼티들은 무시되거나 타입 오류가 발생할 여지가 생긴다.
+
+### React Event 표준 타입
+React에서는 각 이벤트별로 표준 타입을 지원한다.  
+실제로 화살표 함수로 구현한 곳의 event 매개변수 위치에 마우스 커서를 올려보면 
+`(parameter) e: React.ChangeEvent<HTMLInputElement>` 타입으로 추론된다.  
+해당 타입은 React 표준 change 이벤트 타입이다.  
+
+- [src/Event.tsx](src/Event.tsx)
+  ```tsx
+  import { useState } from "react"
+
+  function Event() {
+    const [text, setText] = useState<string>();
+    const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setText(e.target.value)
+    }
+    return (
+      <div>
+        <h1>Todo</h1>
+        <input
+          type="text"
+          onChange={onChangeInput}
+        />
+      </div>
+    );
+  }
+  export default Event;
+  ```
+
+</details>
+<br>
+
 ## 템플릿1
 <details>
 <summary>펼치기/접기</summary>
