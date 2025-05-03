@@ -184,7 +184,7 @@
 
 React의 useState라는 함수는 초기값으로 전달한 인수의 타입에 따라서 state변수와 state 변화함수의 타입을 자동으로 추론해준다.  
 이런 특징을 갖는 함수들을 generic 함수라고 부른다.  
-- [src/UseState.tsx](src/UseState.tsx)
+- [src/syntax/UseState.tsx](src/syntax/UseState.tsx)
   ```ts
   import { useState } from 'react';
   function UseState() {
@@ -204,7 +204,7 @@ React의 useState라는 함수는 초기값으로 전달한 인수의 타입에 
 
 
 state 선언 아래에 `setText(1);`과 같이 string 타입이 아닌 다른 값을 인수로 전달할 경우 오류가 발생하게 된다.
-- [src/UseState.tsx](src/UseState.tsx)
+- [src/syntax/UseState.tsx](src/syntax/UseState.tsx)
   ```ts
   import { useState } from 'react';
   function UseState() {
@@ -214,7 +214,7 @@ state 선언 아래에 `setText(1);`과 같이 string 타입이 아닌 다른 �
   ```
 
 만약 useState를 쓸 때 초기값에 넣을 게 마땅히 없어서 `useState();와 같이` 비워두는 경우에는 undefined로 추론되는 것을 확인할 수 있다.  
-- [src/UseState.tsx](src/UseState.tsx)
+- [src/syntax/UseState.tsx](src/syntax/UseState.tsx)
   ```ts
   import { useState } from 'react';
   function UseState() {
@@ -232,7 +232,7 @@ state 선언 아래에 `setText(1);`과 같이 string 타입이 아닌 다른 �
 결국 setEmpty() 함수에도 인수로 전달할 수 있는 타입은 undefined 타입이 되는것이다.  
 타입스크립트에서는 위와같이 사용하면 안된다.  
 만약 초기값으로 설정할 마땅한 값이 없는 경우 제네릭 타입 변수를 직접 설정해줘야 한다.  
-- [src/UseState.tsx](src/UseState.tsx)
+- [src/syntax/UseState.tsx](src/syntax/UseState.tsx)
   ```ts
   import { useState } from 'react';
   function UseState() {
@@ -255,7 +255,7 @@ state 변수 string에 마우스 커서를 올려보면 `const string: string | 
 
 input 입력 태그에 값을 입력할 경우 text타입의 state변수 값을 입력한 값으로 변경하려는 기능을 구현해본다고 가정한다.  
 react에서는 input 태그에 onchange 이벤트 속성에 함수를 바인딩할 수 있다.  
-- [src/Event.tsx](src/Event.tsx)
+- [src/syntax/Event.tsx](src/syntax/Event.tsx)
   ```tsx
   import { useState } from "react"
 
@@ -279,7 +279,7 @@ react에서는 input 태그에 onchange 이벤트 속성에 함수를 바인딩�
 이벤트 속성에 바인딩 된 함수에 타입스크립트를 적용한다면 어떤 문법으로 적용해야 할까?  
 먼저 매개변수로 전달하는 event 객체의 타입을 정의 해야한다.  
 사용하는 값이 e.target.value이기 때문에 아래 코드와 같이 string타입의 value를 갖는 target 프로퍼티에 매핑되는 객체 타입을 지정할 수 있다.  
-- [src/Event.tsx](src/Event.tsx)
+- [src/syntax/Event.tsx](src/syntax/Event.tsx)
   ```tsx
   import { useState } from "react"
 
@@ -311,7 +311,7 @@ React에서는 각 이벤트별로 표준 타입을 지원한다.
 `(parameter) e: React.ChangeEvent<HTMLInputElement>` 타입으로 추론된다.  
 해당 타입은 React 표준 change 이벤트 타입이다.  
 
-- [src/Event.tsx](src/Event.tsx)
+- [src/syntax/Event.tsx](src/syntax/Event.tsx)
   ```tsx
   import { useState } from "react"
 
@@ -333,6 +333,124 @@ React에서는 각 이벤트별로 표준 타입을 지원한다.
   export default Event;
   ```
 
+</details>
+<br>
+
+## Props 타입 지정 (function, Children)
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+부모 컴포넌트에서 자식 컴포넌트로 Props를 전달할 경우, 자식 컴포넌트에서 전달받은 Props에 대한 타입을 정의해줘야 한다.  
+
+### props type 예제1 - Function
+
+- [src/syntax/props/Parent.tsx](src/syntax/props/Parent.tsx)
+  ```tsx
+  import Child from './Child';
+
+  export default function Parent() {
+    const onClick = (text: string) => {
+      console.log("Parent컴포넌트 onClick 호출 - text: ", text)
+    }
+
+    return (
+      <div>
+        <Child onClick={onClick} />
+      </div>
+    );
+  }
+  ```
+
+- [src/syntax/props/Child.tsx](src/syntax/props/Child.tsx)
+  ```tsx
+  export default function Child({ onClick }) {
+    const onClickBtn = () => {
+      onClick("Child");
+    }
+    return (
+      <>
+        <button onClick={onClickBtn}>Parent onClick 호출</button>
+      </>
+    )
+  }
+  ```
+  아래와 같은 오류가 발생한다.
+  ```
+  Binding element 'onClick' implicitly has an 'any' type.ts(7031)
+  ```
+
+  구조 분해 할당된 요소 'onClick'의 타입이 명시되지 않았기 때문에, TypeScript가 'any' 타입으로 추론하고 있다는 의미이다.
+  즉, 'onClick'이 어떤 타입인지 알 수 없다는 경고이다.
+
+- [src/syntax/props/Child.tsx](src/syntax/props/Child.tsx)
+  ```tsx
+  interface Props { /* props 상세타입 정의 */
+    onClick: (text: string) => void;
+  }
+
+  export default function Child({ onClick }: Props) { /* props 상세타입 지정 */
+    const onClickBtn = () => {
+      onClick("Child");
+    }
+    return (
+      <>
+        <button onClick={onClickBtn}>Parent onClick 호출</button>
+      </>
+    )
+  }
+  ```
+위와 같이 props에 대한 상세 타입을 정의해주면 오류가 사라진다.
+
+### props type 예제2 - Children
+
+- [src/syntax/props/Parent.tsx](src/syntax/props/Parent.tsx)
+  ```tsx
+  import Child from './Child';
+
+  export default function Parent() {
+    return (
+      <div>
+        <Child>
+          {/* Children */}
+          <div>Children</div>
+        </Child>
+      </div>
+    );
+  }
+  ```
+
+Children은 props로 넘겨받아 사용하기 때문에 props에 타입을 지정해줘야 한다.  
+이때 사용되는 타입은 ReactElement로 `import { ReactElement } from 'react';`와 같이 `react`로 부터 불러오기 문법을 사용해야 한다.
+- [src/syntax/props/Child.tsx](src/syntax/props/Child.tsx)
+  ```tsx
+  import { ReactElement } from 'react';
+
+  interface Props {
+    children: ReactElement;
+  }
+
+  export default function Child({ children }: Props) {
+    return (
+      <>
+        <div> {children} </div>
+      </>
+    )
+  }
+  ```
+
+</details>
+<br>
+
+## 템플릿1
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+### 
+- src/chapter.ts
+  ```ts
+  ```
 </details>
 <br>
 
