@@ -29,7 +29,10 @@ function App() {
   return (
     <div className="App">
       <h1>Todo</h1>
-      <Editor onClickAdd={onClickAdd}/>
+      <Editor onClickAdd={onClickAdd}>
+        {/* Children */}
+        <div>id: {idRef.current}</div>
+      </Editor>
 
     </div>
   );
