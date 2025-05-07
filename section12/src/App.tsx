@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import Editor from './components/Editor';
+import TodoItem from './components/TodoItem';
 
 interface Todo {
   id: number;
@@ -34,7 +35,7 @@ function App() {
         <div>id: {idRef.current}</div>
       </Editor>
       <div>
-          {todos.map((todo) => <div key={todo.id}> {todo.content} </div>)}
+          {todos.map((todo) => <TodoItem {...todo} />)}
         </div>
     </div>
   );
