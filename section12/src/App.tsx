@@ -33,7 +33,9 @@ function App() {
         {/* Children */}
         <div>id: {idRef.current}</div>
       </Editor>
-
+      <div>
+          {todos.map((todo) => <div key={todo.id}> {todo.content} </div>)}
+        </div>
     </div>
   );
 }
