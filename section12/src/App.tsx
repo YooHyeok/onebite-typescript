@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import Editor from './components/Editor';
 import TodoItem from './components/TodoItem';
-import { Todo } from './types';
+// import { Todo } from './types';
 
 function App() {
 

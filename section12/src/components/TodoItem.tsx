@@ -1,4 +1,4 @@
-import { Todo } from '../types';
+// import { Todo } from '../types';
 
 interface Props extends Todo{
   // extra: string; // 추가적인 새로운 props 요소를 받을 수 있음.
