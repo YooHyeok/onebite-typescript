@@ -336,7 +336,7 @@ React에서는 각 이벤트별로 표준 타입을 지원한다.
 </details>
 <br>
 
-## Props 타입 지정 (function, Children)
+> ## Props 타입 지정 (function, Children)
 <details>
 <summary>펼치기/접기</summary>
 <br>
@@ -442,15 +442,96 @@ Children은 props로 넘겨받아 사용하기 때문에 props에 타입을 지�
 </details>
 <br>
 
-## 템플릿1
+## 타입 모듈화
 <details>
 <summary>펼치기/접기</summary>
 <br>
 
-### 
-- src/chapter.ts
+
+- [src/App.ts](src/App.tsx)
   ```ts
+  interface Todo {
+    id: number;
+    content: string;
+  }
+  function App() {
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  return (
+    <div>
+      <div>
+        {todos.map((todo) => <TodoItem {...todo} />)}
+      </div>
+    </div>
+    );
+  }
+
+  export default App;
   ```
+- [src/components/TodoItem.tsx](src/components/TodoItem.tsx)
+  ```ts
+  interface Props {
+    id: number;
+    content: string;
+  }
+  export default function TodoItem({id, content}: Props) {
+    return <div> 
+      {id} 번: { content }
+      <button>삭제</button>
+    </div>
+  }
+  ```
+App.tsx 컴포넌트의 Todo 타입과, TodoItem.tsx 컴포넌트의 Props 타입은 동일한 프로퍼티(타입)을 갖는다.
+동일한 타입이 여러 컴포넌트에서 공통으로 사용될때 별도의 타입스크립트 파일을 만들어 분리하는게 좋다.
+
+### export interface
+
+- [src/types.ts](src/types.ts)
+  ```ts
+  export interface Todo {
+    id: number;
+    content: string;
+  }
+  ```
+
+위와 같이 ts파일을 만들어 내보내기를 통해 공통으로 반복되는 타입들 인터페이스로 정의하여 분리한뒤, 아래 코드와 같이 import를 통해 props를 가져온다.  
+
+- [src/chapter.ts](src/App.tsx)
+  ```ts
+  import { Todo } from './types';
+  function App() {
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  return (
+    <div>
+      <div>
+        {todos.map((todo) => <TodoItem {...todo} />)}
+      </div>
+    </div>
+    );
+  }
+
+  export default App;
+  ```
+
+가져온 타입은 interface이기 때문에 확장 문법도 사용이 가능하다.
+
+- [src/components/TodoItem.tsx](src/components/TodoItem.tsx)
+  ```ts
+  import { Todo } from './types';
+  interface Props extends Todo{
+    // extra: string; // 추가적인 새로운 props 요소를 받을 수 있음.
+  }
+  export default function TodoItem({id, content}: Props) {
+    return <div> 
+      {id} 번: { content }
+      <button>삭제</button>
+    </div>
+  }
+  ```
+
 </details>
 <br>
 
