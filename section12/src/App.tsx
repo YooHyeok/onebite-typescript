@@ -2,11 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import Editor from './components/Editor';
 import TodoItem from './components/TodoItem';
+import { Todo } from './types';
 
-interface Todo {
-  id: number;
-  content: string;
-}
 function App() {
 
   const [todos, setTodos] = useState<Todo[]>([]);
