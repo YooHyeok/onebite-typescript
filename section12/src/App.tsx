@@ -7,7 +7,9 @@ import TodoItem from './components/TodoItem';
 function App() {
 
   const [todos, setTodos] = useState<Todo[]>([]);
+
   const idRef = useRef<number>(0) // todo Object가 todos 배열에 추가될 때 마다 증가 시킬 ref 변수
+
   const onClickAdd = (text: string) => {
     setTodos([
       ...todos,
@@ -17,6 +19,11 @@ function App() {
       }
     ])
   }
+
+  const onClickDelete = (id: number) => {
+    setTodos(todos.filter((todo) => todo.id !== id))
+  }
+
   /**
    * todos state 변수 변경 감지.
    */
@@ -32,7 +39,7 @@ function App() {
         <div>id: {idRef.current}</div>
       </Editor>
       <div>
-          {todos.map((todo) => <TodoItem {...todo} />)}
+          {todos.map((todo) => <TodoItem {...todo} onClickDelete={onClickDelete}/>)}
         </div>
     </div>
   );
