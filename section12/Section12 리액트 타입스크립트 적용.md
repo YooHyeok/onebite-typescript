@@ -535,14 +535,114 @@ App.tsx 컴포넌트의 Todo 타입과, TodoItem.tsx 컴포넌트의 Props 타�
 </details>
 <br>
 
-## 템플릿1
+## useReducer
 <details>
 <summary>펼치기/접기</summary>
 <br>
 
-### 
+useReducer의 경우 타입스크립트를 적용하지 않은 코드와 적용한 코드를 예시로만 작성하겠다.
+
+### 순수 자바스크립트
 - src/chapter.ts
   ```ts
+  import { useRef, useEffect, useReducer } from 'react';
+  import { Todo } from './types';
+
+  /**
+  * reducer 함수는 state, action 두개의 매개변수를 갖는다.
+  * 매개변수 1. state: 상태
+  * 매개변수 2. action: 행위
+  */
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'CREATE': return [...state, action.data]
+      case 'DELETE': return state.filter((it) => it.id !== action.id)
+    }
+  }
+
+  function App() {
+
+    /**
+    * useReducer는 2개의 매개변수를 받는다.  
+    * - 매개변수 1. reducer라는 상태(state) 변화를 직접 처리하는 함수
+    * - 매개변수 2. 상태(state)의 초기값
+    */
+    const [todos, dispatch] = useReducer(reducer, []);
+
+    const idRef = useRef<number>(0)
+
+    const onClickAdd = (text) => {
+      dispatch({
+        type: "CREATE",
+        data: {
+          id: idRef.current++, // 값 증가
+          content: text
+        }
+      })
+    }
+
+    const onClickDelete = (id) => {
+      dispatch({
+        type: "DELETE",
+        id: id
+      })
+    }
+  }
+
+  export default App;
+  ```
+### 타입스크립트 적용
+- src/chapter.ts
+  ```ts
+  import { useRef, useEffect, useReducer } from 'react';
+  import { Todo } from './types';
+
+  /**
+  * 유니온 타입
+  */
+  type Action = {
+    type: "CREATE",
+    data: {
+      id: number;
+      content: string
+    }
+  } | {type: "DELETE"; id: number };
+  
+  /**
+  * reducer 함수는 state, action 두개의 매개변수를 갖는다.
+  * 매개변수 1. state: 상태
+  * 매개변수 2. action: 행위
+  */
+  function reducer(state: Todo[], action: Action) {
+    switch (action.type) {
+      case 'CREATE': return [...state, action.data]
+      case 'DELETE': return state.filter((it) => it.id !== action.id)
+    }
+  }
+  function App() {
+    const [todos, dispatch] = useReducer(reducer, []);
+
+    const idRef = useRef<number>(0)
+
+    const onClickAdd = (text: string) => {
+      dispatch({
+        type: "CREATE",
+        data: {
+          id: idRef.current++,
+          content: text
+        }
+      })
+    }
+
+    const onClickDelete = (id: number) => {
+      dispatch({
+        type: "DELETE",
+        id: id
+      })
+    }
+  }
+
+  export default App;
   ```
 </details>
 <br>
