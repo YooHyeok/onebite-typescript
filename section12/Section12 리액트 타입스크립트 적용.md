@@ -647,6 +647,186 @@ useReducer의 경우 타입스크립트를 적용하지 않은 코드와 적용�
 </details>
 <br>
 
+## ContextAPI 
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+Context 
+
+### createContext
+
+```ts
+export const Context = React.createContext(); // [Error] index.d.ts(709, 9): An argument for 'defaultValue' was not provided.
+```
+
+위와같이 Context를 생성하는 `createContext()` 함수를 선언하고 ctrl + click을 하여 타입을 확인해보자.
+
+- [node_modules/@types/react/index.d.ts](node_modules/@types/react/index.d.ts)
+  ```ts
+      /**
+     * Lets you create a {@link Context} that components can provide or read.
+     *
+     * @param defaultValue The value you want the context to have when there is no matching
+     * {@link Provider} in the tree above the component reading the context. This is meant
+     * as a "last resort" fallback.
+     *
+     * @see {@link https://react.dev/reference/react/createContext#reference React Docs}
+     * @see {@link https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context/ React TypeScript Cheatsheet}
+     *
+     * @example
+     *
+     * ```tsx
+     * import { createContext } from 'react';
+     *
+     * const ThemeContext = createContext('light');
+     * function App() {
+     *   return (
+     *     <ThemeContext value="dark">
+     *       <Toolbar />
+     *     </ThemeContext>
+     *   );
+     * }
+     * ```
+     */
+    function createContext<T>(
+        // If you thought this should be optional, see
+        // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/24509#issuecomment-382213106
+        defaultValue: T,
+    ): Context<T>;
+  ```
+
+한개의 타입 변수 T를 사용하는 제네릭 함수이며, 제네릭 타입변수로 선언한 T 타입을 갖는 하나의 매개변수를 필수로 받고있다.  
+따라서 `React.createContext();`와 같이 인수를 전달하지 않을 경우 오류가 발생하게 된다.  
+
+초기값으로 전달할 값이 없다면 null값을 전달한다.  
+변수명에 마우스 커서를 올려보면 아래와 같이 React.Context의 null로 추론되는것을 볼수가 있다.  
+```ts
+const Context: React.Context<null>
+```
+이는 null을 공급하는 Context 타입이다 정도로 이해할 수 있다.  
+
+- [src/app/contextAPI/App.tsx](src/app/contextAPI/App.tsx)
+  ```ts
+  export const TodoStateContext = React.createContext<Todo[] | null>(null);
+  
+  ```
+Context에 컴포넌트 tree에 Todo 객체를 요소로 갖는 Todos라는 배열을 공급할 목적으로 사용한다고 가정해본다.  
+초기값으로 null을 선언해야 하지만 null타입의 값을 공급하는 Context로 추론되면 안된다.  
+따라서 null로 초기화 해야 한다면 createContext의 제네릭 타입 변수 T에 `Todo[] | null` 형태의 유니온 타입을 지정해 준다.  
+
+### 함수 공급 Context
+- [src/app/contextAPI/App.tsx](src/app/contextAPI/App.tsx)
+  ```ts
+  interface TodoDisptach {
+    onClickAdd: (text: string) => void;
+    onClickDelete: (id: number) => void
+  }
+  export const TodoDispatchContext = createContext<TodoDisptach | null>(null);
+  ```
+
+함수를 공급하는 Context도 동일하다.  
+먼저 함수의 타입을 인터페이스로 정의한다.  
+초기값으로 null을 선언한 뒤 유니온 타입으로 인터페이스 타입과 null을 createContext의 제네릭 타입 변수 T에 지정해준다.  
+
+### 완성 예제 코드
+```ts
+import React, { createContext, useRef, useEffect, useReducer } from 'react';
+import '../App.css'
+import Editor from '../../components/Editor';
+import TodoItem from '../../components/TodoItem';
+
+type Action = {
+  type: "CREATE",
+  data: {
+    id: number;
+    content: string
+  }
+} | {type: "DELETE"; id: number };
+
+function reducer(state: Todo[], action: Action) {
+  switch (action.type) {
+    case 'CREATE': return [...state, action.data]
+    case 'DELETE': return state.filter((it) => it.id !== action.id)
+  }
+}
+
+export const TodoStateContext = React.createContext(null);
+// export const TodoStateContext = React.createContext<Todo[] | null>(null);
+
+
+interface TodoDisptach {
+  onClickAdd: (text: string) => void;
+  onClickDelete: (id: number) => void
+}
+export const TodoDispatchContext = createContext<TodoDisptach | null>(null); //
+
+export default function AppVer2() {
+
+  const [todos, dispatch] = useReducer(reducer, []);
+
+  const idRef = useRef<number>(0)
+
+  const onClickAdd = (text: string) => {
+    dispatch({
+      type: "CREATE",
+      data: {
+        id: idRef.current++, // 값 증가
+        content: text
+      }
+    })
+  }
+
+  const onClickDelete = (id: number) => {
+    dispatch({
+      type: "DELETE",
+      id: id
+    })
+  }
+
+  useEffect(() => {
+    console.log(todos)
+  }, [todos])
+
+  const todoDispatch = {
+    onClickAdd,
+    onClickDelete
+  }
+
+  return (
+    <div className="App">
+      <h1>Todo</h1>
+      <TodoStateContext.Provider value={todos}>
+        <TodoDispatchContext.Provider value={todoDispatch}>
+          <Editor onClickAdd={onClickAdd}>
+            {/* Children */}
+            <div>id: {idRef.current}</div>
+          </Editor>
+          <div>
+            {todos.map((todo) => <TodoItem {...todo} onClickDelete={onClickDelete}/>)}
+          </div>
+        </TodoDispatchContext.Provider>
+      </TodoStateContext.Provider>
+    </div>
+  );
+}
+```
+
+</details>
+<br>
+
+## 템플릿1
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+### 
+- src/chapter.ts
+  ```ts
+  ```
+</details>
+<br>
+
 ## 템플릿2
 <details>
 <summary>펼치기/접기</summary>
