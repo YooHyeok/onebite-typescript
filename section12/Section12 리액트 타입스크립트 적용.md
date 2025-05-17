@@ -815,6 +815,75 @@ export default function AppVer2() {
 </details>
 <br>
 
+## 외부 라이브러리와 definitely types
+<details>
+<summary>펼치기/접기</summary>
+<br>
+
+타입스크립트 환경에서 외부 라이브러리들을 설치하고 사용하기 위해 definitely types를 설치하고 사용하는 방법에 대해 셜펴본다.  
+
+타입스크립트를 배우기 전, 순수 자바스크립트만으로 개발을 진행할 때.  
+예를 들어 npm 사이트에서 react-router-dom과 같은 외부 패키지를 검색하여 사용한다고 하면 패키지의 상세 페이지에 들어가서 installation 명령어를 입력,설치 하기만 하면 사용할 수 있다.  
+
+그러나 타입스크립트 환경에서는 자바스크립트와 다르게 해당 라이브러리만 설치한다고 바로 이용할 수 없다.  
+타입스크립트는 기본적으로 코드를 실행하기 전에 타입 검사 기능을 수행하기 때문이다.  
+따라서 라이브러리들의 코드도 타입 검사를 수행해야 한다.  
+그렇기 때문에 라이브러리 코드들에 대한 타입 정보가 제공되지 않은 상황에서는 타입 검사가 제대로 이루어지지 않기 때문에 오류가 발생하고 바로 사용할 수가 없다.  
+
+물론 당연히 예외도 있다.  
+
+앞서 말한 react-router-dom 라이브러리의 경우 타입스크립트로 작성된 라이브러리 이기 때문에 설치하자마자 바로 사용할 수 있다.  
+npm 사이트에서 타입스크립트로 제작된 라이브러리들의 이름에는 오른쪽에 `[TS]` 마크가 붙는다.
+TS 마크가 붙은 라이브러리는 그냥 명령어만 입력하고 설치한 뒤 바로 쓸 수 있다는 것이다.  
+
+그러나 아쉽게도 모든 라이브러리가 타입스크립트를 기본적으로 제공하지는 않는다. 
+
+### lodash
+자바스크립트의 배열과 객체를 좀더 쉽게 사용할 수 있도록 도와주는 라이브러리이며, 주간 다운로드 양이 5천만회에 육박하는 굉장히 인기 높은 라이브리이다.  
+
+해당 라이브러리는 `[TS]`마크 위치에 `[DT]`마크가 붙어있다.
+
+이렇게 TS마크가 붙어있지 않은 라이브러리들은 기본적으로 타입 정보가 제공되지 않는다.  
+쉽게 말해 자바스크립트로 만들어진 라이브러리이다.  
+따라서 타입스크립트에서는 해당 라이브러리를 설치해도 사용할 수 없다.  
+
+이때 `[TS]`마크 대신 `[DT]`마크가 붙어있다면 방법이 있다.  
+`[DT]`마크를 클릭해보면 새로운 링크로 이동하게 되는데, @types/lodash 라는 또다른 라이브러리의 페이지로 이동된다.  
+@types/lodash는 lodash라는 라이브러리의 타입 정보를 갖는 패키지이다.
+따라서 lodash라는 라이브러리를 타입스크립트 프로젝트에서 사용하려면 @types/lodash를 추가적으로 설치해줘야 된다고 이해하면 된다.  
+
+- lodash 패키지 설치
+  ```bash
+  npm install lodash
+  ```
+- [src/index.tsx](src/index.tsx)
+  ```ts
+  import _ from 'lodash';
+  ```
+위와같이 lodash패키지를 설치하고 import하게되면 아래와같은 오류가 발생한다.  
+
+```
+Could not find a declaration file for module 'lodash'. 'c:/Programming/workspace_vs/onebite-typescript/section12/node_modules/lodash/lodash.js' implicitly has an 'any' type.
+Try `npm i --save-dev @types/lodash` if it exists or add a new declaration (.d.ts) file containing `declare module 'lodash';`ts(7016)
+```
+
+모듈 'lodash'에 대한 선언 파일을 찾을 수 없습니다.  
+즉, lodash는 js 파일이기 때문에 타입선언을 찾을 수 없다는 오류이다.  
+```bash
+npm install @types/lodash
+```
+위 명령을 통해 lodash 타입정보를 설치하여 해결할 수 있게 된다.  
+이와같이 lodash같은 자바스크립트로 만들어진 라이브러리를 이용할 때에는 해당 라이브러리의 타입정보만 제공하는 패키지가 별도로 있는지까지 확인해 봐야 한다.  
+
+
+이전에도 @types/lodash와 비슷한 라이브러리들을 설치한 적이 있다.  
+package.json을 열어보면 Node.js의 기본 기능들에 대한 타입 정보를 갖고 있는 `@types/node` 라는 패키지를 설치했으며,  
+React를 타입스크립트 프로젝트로 만들기 위해 `@types/react`, `@types/react-dom`, `@types/jest` 3가지의 패키지도 함께 설치했다.  
+React나 React-Dom도 자바스크립트로 만들어진 라이브러리이기 때문에 별도의 React의 타입 정보를 갖고있는 패키지들도 별도로 설치했다.  
+이렇게 @types라는 이름이 붙어있는 타입 정보를 제공하는 패키지들을 `definitely types` 라고 부른다 
+</details>
+<br>
+
 ## 템플릿1
 <details>
 <summary>펼치기/접기</summary>
