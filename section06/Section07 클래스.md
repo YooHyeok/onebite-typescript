@@ -307,10 +307,10 @@ StudentDeveloper클래스 생성자 내부에서 super 메소드를 호출함으
       this.age = grade;
     }
     /* 프로토타입으로 등록 */
-    this.prototype.study = function() {
+    Student.prototype.study = function() {
       console.log("열심히 공부함.")
     }
-    this.prototype.introduce = function() {
+    Student.prototype.introduce = function() {
       console.log("안녕하세요!")
     }
     let studentF = new Student();
@@ -341,10 +341,10 @@ StudentDeveloper클래스 생성자 내부에서 super 메소드를 호출함으
       this.age = age;
     }
     /* 프로토타입으로 등록 */
-    this.prototype.study = function() {
+    Student.prototype.study = function() {
       console.log("열심히 공부함.")
     }
-    this.prototype.introduce = function() {
+    Student.prototype.introduce = function() {
       console.log("안녕하세요!")
     }
 
@@ -359,7 +359,7 @@ StudentDeveloper클래스 생성자 내부에서 super 메소드를 호출함으
     /* 생성자만 다시 자신것으로 변경 - 메소드만 상속, 생성자는 고유하게 */
     StudentDeveloper.prototype.constructor = StudentDeveloper;
 
-    this.prototype.programming = function () {
+    StudentDeveloper.prototype.programming = function () {
       console.log(`${this.favoriteSkill}로 프로그래밍 함`)
     }
 
