@@ -202,25 +202,25 @@ https://ts.winterlood.com/6c9bf87f-6a8f-4e96-95b4-5e12d9f82165#c8a5f8ebaa7d4692a
 # [Section05 함수와 타입.md](<section04/Section05 함수와 타입.md>)
 <br>
 
-# [Section06 인터페이스](<section05/Section06 인터페이스.md>)
+# [Section06 인터페이스.md](<section05/Section06 인터페이스.md>)
 <br>
 
-# [Section07 클래스](<section06/Section07 클래스.md>)
+# [Section07 클래스.md](<section06/Section07 클래스.md>)
 <br>
 
-# [Section08 제네릭](<section07/Section08 제네릭.md>)
+# [Section08 제네릭.md](<section07/Section08 제네릭.md>)
 <br>
 
-# [Section09 타입 조작하기](<section08/Section09 타입 조작하기.md>)
+# [Section09 타입 조작하기.md](<section08/Section09 타입 조작하기.md>)
 <br>
 
-# [Section10 조건부 타입](<section09/Section10 조건부 타입.md>)
+# [Section10 조건부 타입.md](<section09/Section10 조건부 타입.md>)
 <br>
 
-# [Section11 유틸리티 타입](<section10/Section11 유틸리티 타입.md>)
+# [Section11 유틸리티 타입.md](<section10/Section11 유틸리티 타입.md>)
 <br>
 
-# [Section12 리액트 타입스크립트 적용](<section12/Section12 리액트 타입스크립트 적용.md>)
+# [Section12 리액트 타입스크립트 적용.md](<section12/Section12 리액트 타입스크립트 적용.md>)
 
-# [Seaction-Final 타입스크립트 템플릿](<section-final/Seaction-Final 타입스크립트 템플릿.md>)
+# [Seaction-Final 타입스크립트 템플릿.md](<section-final/Seaction-Final 타입스크립트 템플릿.md>)
 <br>
